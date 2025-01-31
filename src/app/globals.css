@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+html {
+  font-size: 90%;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Inter", serif;
+}
+
+body {
+  margin: 0;
+}
+
+
+.scroll-invisible::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+
+.scroll-invisible::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+
+.scroll-invisible::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+.scroll-invisible::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+
+/* Unique container styling */
+.my-custom-container {
+  padding: 20px; /* Add padding to the entire container */
+ 
+}
+
+/* Specific styles for content */
+.my-custom-content {
+  color: #333; /* Ensure text color is consistent */
+  line-height: 1.6; /* Better text readability */
+  font-size: 16px; /* Adjust text size */
+}
+
+/* Style for lists */
+.my-custom-content ul, .my-custom-content ol {
+  margin: 16px 0; /* Space above and below lists */
+  padding-left: 20px; /* Indent list items */
+  list-style-position: outside; /* Bullets or numbers outside the content */
+}
+
+.my-custom-content li {
+  margin-bottom: 8px; /* Space between list items */
+}
+
+/* Additional spacing for paragraphs */
+.my-custom-content p {
+  margin: 16px 0; /* Space above and below paragraphs */
+}
+
+/* Handle any headings (optional, remove if not needed) */
+.my-custom-content h2, .my-custom-content h3 {
+  margin: 24px 0 16px; /* Add space around headings */
+  font-weight: bold;
+  color: #111;
+}
+/* Unique container styling */
+.my-custom-container {
+  padding: 20px; /* Add padding to the entire container */
+}
+
+/* Specific styles for content */
+.my-custom-content {
+  color: #333; /* Ensure text color is consistent */
+  line-height: 1.6; /* Better text readability */
+  font-size: 16px; /* Adjust text size */
+}
+
+/* Style for lists */
+.my-custom-content ul, .my-custom-content ol {
+  margin: 16px 0; /* Space above and below lists */
+  padding-left: 20px; /* Indent list items */
+  list-style-position: outside; /* Bullets or numbers outside the content */
+}
+
+.my-custom-content li {
+  margin-bottom: 8px; /* Space between list items */
+}
+
+/* Additional spacing for paragraphs */
+.my-custom-content p {
+  margin: 16px 0; /* Space above and below paragraphs */
+}
+
+/* Handle any headings (optional, remove if not needed) */
+.my-custom-content h2, .my-custom-content h3 {
+  margin: 24px 0 16px; /* Add space around headings */
+  font-weight: bold;
+  color: #111;
+}
+
+.mb-\[30px\] {
+  margin-bottom: 30px;
+}
