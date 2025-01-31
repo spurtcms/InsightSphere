@@ -136,6 +136,7 @@ function Header_component({ }) {
         setheader_categorySlug(val?.categoryName)
         dispatch(Header_keyword_redux_function(""));
         setblog_keyword("");
+        
     }
 
     const handleclick_logoimage = (e) => {
