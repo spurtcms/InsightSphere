@@ -3,7 +3,8 @@ import React from 'react'
 export const Skeletonloader_homePage_layout2 = () => {
     return (
         <>
-            <div class="flex justify-center gap-14">
+            <div
+                class="gap-[22px] grid grid-cols-3 max-[530px]:grid-cols-1 max-[680px]:grid-cols-2 mb-[74px] max-[1280px]:mb-[32px]">
                 {Array.from({ length: 3 }).map((_, index) => (
                     <div key={index} className="animate-pulse w-full">
                         <div className="bg-gray-300 rounded-[24px] w-full h-[418px]"></div>
