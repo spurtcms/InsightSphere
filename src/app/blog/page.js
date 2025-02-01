@@ -524,7 +524,7 @@ const Blog_Index = ({ home_page_description }) => {
                         <div
                             class="gap-[13px] grid grid-cols-5 max-[410px]:grid-cols-1 max-[560px]:grid-cols-2 max-[860px]:grid-cols-3 mb-[84px] max-[1280px]:mb-[32px]">
 
-                            {All_other_blogs_api_data.slice(0, 5)?.map((val, i) => (
+                            {All_other_blogs_api_data?.slice(0, 5)?.map((val, i) => (
                                 <>
 
                                     <a href={`/blog/${val?.slug}`} class="group">
