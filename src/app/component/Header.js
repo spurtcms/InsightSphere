@@ -5,12 +5,22 @@ import { GET_HEADER_LOGO_QUERY, GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUER
 import { header_slug_Reduc_function, Header_api_result_redux_function, Header_keyword_redux_function } from '@/StoreConfiguration/slices/customer';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { image_url, logo_url } from '../api/url';
 
 
 
 function Header_component({ }) {
+
+    const [login_Header, setLogin_Header] = useState(false);
+    const pathname = usePathname();
+    useEffect(() => {
+        const loginPath = ["/auth/signup", "/auth/signin"];
+        setLogin_Header(loginPath.includes(pathname));
+    }, [pathname]); //to fetch different valut for header
+
+
+    const [menuToggle, setMenuToggle] = useState(false)
 
     const [header_api_result, setheader_api_result] = useState(null);
     const [header_categorySlug, setheader_categorySlug] = useState()
@@ -136,7 +146,7 @@ function Header_component({ }) {
         setheader_categorySlug(val?.categoryName)
         dispatch(Header_keyword_redux_function(""));
         setblog_keyword("");
-        
+
     }
 
     const handleclick_logoimage = (e) => {
@@ -164,10 +174,11 @@ function Header_component({ }) {
 
     return (
         <>
-            <header>
+            <header className={`p-[36px_16px] bg-white h-[120px] max-md:h-[68px] max-xl:h-[79px]  max-xl:p-[16px]
+                 ${login_Header ? " bg-white" : "bg-[bg-[#FFF6E3]"}`}>
                 <div
-                    class="flex justify-between items-center mx-auto px-[16px] max-w-[1280px] h-[120px] max-[1280px]:h-[60px]">
-                    <div class="flex items-center space-x-6">
+                    class="flex justify-between items-center mx-auto max-w-[1280px]">
+                    <div class="flex items-center space-x-6 w-full">
                         {/* <Link href={`/`} legacyBehavior> */}
                         <a onClick={(e) => handleclick_logoimage(e)} style={{ cursor: "pointer" }}>
                             {/* <img src={"/img/SpurtCMS-logo.svg"}
@@ -188,7 +199,7 @@ function Header_component({ }) {
 
                         {/* </Link> */}
 
-                        <div class="relative w-full max-w-[400px] h-[47px]" ref={divRef}>
+                        <div class="relative w-full max-w-[400px] h-[47px] max-sm:hidden" ref={divRef}>
                             <input type="text"
                                 class="border-0 bg-[#EBEBEB] focus:shadow-[unset] px-8 rounded-[50px] focus:ring-[transparent] w-full h-full font-normal text-[#0000008F] text-base focus:outline-[transparent]"
                                 placeholder="search"
@@ -222,11 +233,11 @@ function Header_component({ }) {
                     </div>
                     <div class="flex items-center space-x-[36px] max-[700px]:space-x-4">
                         <div
-                            class="top-0 left-[-100%] z-10 lg:z-0 lg:static lg:static fixed flex flex-col lg:items-center gap-[1.5vw] bg-white lg:bg-[transparent] px-5 lg:px-0 py-5 lg:py-0 w-[50%] lg:w-auto max-[400px]:w-full h-full lg:h-auto duration-500 navLinks">
+                            class={`${menuToggle ? "left-0" : "left-[-100%]"} top-0  z-10 lg:z-0 lg:static fixed flex flex-col lg:items-center gap-[1.5vw] bg-white lg:bg-[transparent] px-5 lg:px-0 py-5 lg:py-0 w-[50%] lg:w-auto max-sm:w-full h-full lg:h-auto duration-500 navLinks`}>
                             <ul class="flex lg:flex-row flex-col gap-[30px] lg:py-[20px] w-full lg:w-auto">
                                 <li class="flex justify-end lg:hidden w-full">
-                                    <a onclick="onMenuToggle(this)" class="ml-auto w-4 text-[30px] cursor-pointer">
-                                        <img src="img/modal-close.svg" alt="" />
+                                    <a onClick={(e) => setMenuToggle(!menuToggle)} class="ml-auto w-4 text-[30px] cursor-pointer">
+                                        <img src="/img/modal-close.svg" alt="" />
                                     </a>
                                 </li>
 
@@ -270,12 +281,12 @@ function Header_component({ }) {
                             </ul>
                         </div>
                         <a href="#"
-                            class="flex justify-center items-center bg-[#120B14] hover:bg-[#382f3b] px-[32px] max-[700px]:px-4 rounded-[50px] h-[47px] font-[700] text-base text-white whitespace-nowrap">
+                            class="p-[10px_32px] inline-block rounded-[50px] text-base font-semibold leading-[27px]   text-[#FFFFFF] bg-[#120B14] whitespace-nowrap max-md:p-[10px] max-md:leading-none  max-md:text-sm hover:bg-[#28282c] max-sm:!ml-0">
                             join now
                         </a>
-                        <a onclick="onMenuToggle(this)"
-                            class="lg:hidden mr-[20px] w-[24px] max-[500px]:w-[16px] text-[30px] cursor-pointer">
-                            <img src="img/menu-black.svg" alt="" />
+                        <a onClick={(e) => setMenuToggle(!menuToggle)}
+                            class="w-[24px] max-lg:grid hidden">
+                                 <img src="/img/menu-button.svg" alt="menu" />
                         </a>
                     </div>
                 </div>
