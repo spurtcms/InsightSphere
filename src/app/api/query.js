@@ -329,7 +329,7 @@ export const GET_POSTS_QUERY_CATEGORY = `query($hierarchylevel: Int!){
   }
   `;
 
-  export const GET_HEADER_LOGO_QUERY = `query
+export const GET_HEADER_LOGO_QUERY = `query
   GeneralInformation($tenantId:Int){
       GeneralInformation(tenantId:$tenantId){
           companyName
@@ -339,3 +339,31 @@ export const GET_POSTS_QUERY_CATEGORY = `query($hierarchylevel: Int!){
       }
   }
 `;
+
+
+export const GET_REGISTER_QUERY = `mutation
+  memberRegister(
+$input: MemberDetails!
+$arguments: MemberArguments
+  ){
+    memberRegister(input:$input,
+    arguments:$arguments)
+  }`;
+
+
+
+
+export const GET_SIGNIN_QUERY = `mutation
+  memberCheckLogin($input: MemberSignin!){
+    memberCheckLogin(input:$input){
+      message
+      token
+      success
+    }
+  }
+`;
+
+
+  
+
+
