@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { fetchGraphQl } from '../api/graphicql';
 import { GET_HEADER_LOGO_QUERY, GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUERY } from '../api/query';
 import { header_slug_Reduc_function, Header_api_result_redux_function, Header_keyword_redux_function } from '@/StoreConfiguration/slices/customer';
@@ -15,30 +15,49 @@ function Header_component({ }) {
 
     const [login_Header, setLogin_Header] = useState(false);
     const pathname = usePathname();
+
     useEffect(() => {
         const loginPath = ["/auth/signup", "/auth/signin"];
         setLogin_Header(loginPath.includes(pathname));
-    }, [pathname]); //to fetch different valut for header
+    }, [pathname]); // Determines login header state
 
+    const [menuToggle, setMenuToggle] = useState(false);
 
-    const [menuToggle, setMenuToggle] = useState(false)
+    const dispatch = useDispatch();
 
+    const header_slug = useSelector((s) => s.customerRedux.header_slug);
+    const headerapi_result_redux = useSelector((s) => s.customerRedux.header_api_result_redux);
+
+    const router = useRouter();
+
+    // Memoized state for fetched data
+    const [Blogs_list_api_result, setBlogs_list_api_result] = useState([]);
+    const memoizedBlogsList = useMemo(() => Blogs_list_api_result, [Blogs_list_api_result]);
+
+    // Memoized state for header API results
     const [header_api_result, setheader_api_result] = useState(null);
-    const [header_categorySlug, setheader_categorySlug] = useState()
-    const [blog_keyword, setblog_keyword] = useState(""); // Error state
+    const memoizedHeaderApiResult = useMemo(() => header_api_result, [header_api_result]);
 
-    const dispatch = useDispatch()
-
-    const header_slug = useSelector((s) => s.customerRedux.header_slug)
-    const headerapi_result_redux = useSelector((s) => s.customerRedux.header_api_result_redux)
-
-    const router = useRouter()
-
-    const [Blogs_list_api_result, setBlogs_list_api_result] = useState([]); // To store fetched data
-    const [error, setError] = useState(null);      // To handle errors
+    // Memoized state for logo
     const [header_logo_result, setheader_logo_result] = useState(null);
+    const memoizedHeaderLogoResult = useMemo(() => header_logo_result, [header_logo_result]);
 
-    const [clickedValue, setClickedValue] = useState(""); // Stores event value
+    // Memoized error state
+    const [error, setError] = useState(null);
+    const memoizedError = useMemo(() => error, [error]);
+
+    // Memoized category slug
+    const [header_categorySlug, setheader_categorySlug] = useState();
+    const memoizedCategorySlug = useMemo(() => header_categorySlug, [header_categorySlug]);
+
+    // Memoized blog keyword
+    const [blog_keyword, setblog_keyword] = useState("");
+    const memoizedBlogKeyword = useMemo(() => blog_keyword, [blog_keyword]);
+
+    // Memoized clicked value
+    const [clickedValue, setClickedValue] = useState("");
+    const memoizedClickedValue = useMemo(() => clickedValue, [clickedValue]);
+
     const divRef = useRef(null); // Reference for the div
 
 
@@ -59,9 +78,6 @@ function Header_component({ }) {
 
 
     }, []);
-
-
-    console.log("239823hj", Blogs_list_api_result)
 
     useEffect(() => {
         const fetchData = async () => {
@@ -95,13 +111,15 @@ function Header_component({ }) {
 
     useEffect(() => {
         const fetchCategoryList = async () => {
+
             const variable_category = {
-                tenantId: Blogs_list_api_result?.[0]?.tenantId
+                tenantId: header_api_result?.[0]?.tenantId
 
             };
 
             try {
                 const fetchedCategoryList = await fetchGraphQl(GET_HEADER_LOGO_QUERY, variable_category);
+                console.log("fetchedCategoryList", fetchedCategoryList)
                 setheader_logo_result(fetchedCategoryList);
             } catch (err) {
                 console.error("Error fetching category list:", err);
@@ -111,8 +129,6 @@ function Header_component({ }) {
 
         fetchCategoryList();
     }, [Blogs_list_api_result]); // Fetch the category list only once on component mount
-
-
 
     useEffect(() => {
         const fetchCategoryList = async () => {
@@ -137,7 +153,6 @@ function Header_component({ }) {
         fetchCategoryList();
     }, []); // Fetch the category list only once on component mount
 
-    console.log("header_api_result", header_api_result)
     const handleClick_headerlist = (e, val) => {
 
         e.preventDefault();
@@ -170,16 +185,12 @@ function Header_component({ }) {
 
     }
 
-
-    console.log("clickedValue", clickedValue)
-
     return (
         <>
-            <header className={`p-[36px_16px] bg-white h-[120px] max-md:h-[68px] max-xl:h-[79px]  max-xl:p-[16px]
-                 ${login_Header ? " bg-white" : "bg-[bg-[#FFF6E3]"}`}>
+            <header className="p-[36px_16px] h-[120px] max-md:h-[68px] max-xl:h-[79px]  max-xl:p-[16px] bg-white">
                 <div
-                    class="flex justify-between items-center mx-auto max-w-[1280px]">
-                    <div class="flex items-center space-x-6 w-full">
+                    className={`flex justify-between items-center mx-auto gap-4  ${login_Header ? "max-w-[90%] max-[1400px]:max-w-full" : "max-w-[1280px]"} `}>
+                    <div className="flex items-center space-x-6 w-full">
                         {/* <Link href={`/`} legacyBehavior> */}
                         <a onClick={(e) => handleclick_logoimage(e)} style={{ cursor: "pointer" }}>
                             {/* <img src={"/img/SpurtCMS-logo.svg"}
@@ -192,7 +203,7 @@ function Header_component({ }) {
                                     currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
                                     currentTarget.src = "/img/no-image.png";    // Fallback to a default image
                                 }}
-                                style={{ width: "120px", height: "30px" }}
+                                style={{ width: "120px", height: "30px", objectFit: "contain" }}
 
                             />
 
@@ -200,31 +211,31 @@ function Header_component({ }) {
 
                         {/* </Link> */}
 
-                        <div class="relative w-full max-w-[400px] h-[47px] max-sm:hidden" ref={divRef}>
+                        <div className="relative w-full max-w-[400px] h-[47px] max-sm:hidden max-md:h-[36px]" ref={divRef}>
                             <input type="text"
-                                class="border-0 bg-[#EBEBEB] focus:shadow-[unset] px-8 rounded-[50px] focus:ring-[transparent] w-full h-full font-normal text-[#0000008F] text-base focus:outline-[transparent]"
+                                className="border-0 bg-[#EBEBEB] focus:shadow-[unset] px-8 rounded-[50px] focus:ring-[transparent] w-full h-full font-normal text-[#0000008F] text-base focus:outline-[transparent]"
                                 placeholder="search"
                                 value={blog_keyword}
                                 onChange={(e) => handlechange_blog_keyword(e)}
                             />
                             {clickedValue && <>
-                                <div className='w-full z-[999] relative min-h-[64px] border border-[#cdcdcd70]  mt-2 rounded  p-[16px] flex flex-col items-center justify-start shadow-xl max-h-[300px] overflow-auto bg-white ' >
-                                    <ul className='rounded '>
+                                <div className='w-full z-[999] relative min-h-[64px]  mt-2 rounded-[6px]  p-[16px] flex flex-col items-center justify-start shadow-xl max-h-[300px] overflow-auto bg-white custom-scroll ' >
+                                    <ul className='rounded m-auto '>
 
                                         {Blogs_list_api_result.length > 0 ? <>
-                                            <li className='text-[12px] text-[#919090] mb-[10px]'>BLOGS</li>
+                                            <li className='text-[12px] text-[#919090] font-medium mb-[10px]'>BLOGS</li>
                                             {Blogs_list_api_result?.map((val, i) => (
                                                 <>
                                                     {/* <Link href={`/blog/${val?.slug}`} legacyBehavior> */}
 
-                                                    <li className='text-[14px] mb-[10px] cursor-pointer'
+                                                    <li key={item.id || index} className='text-[12px] font-medium mb-[10px] cursor-pointer last-of-type:mb-0'
                                                         onClick={(e) => handleClick_keyword(e, val)}
                                                     >{val?.title}</li>
                                                     {/* </Link> */}
                                                 </>
                                             ))}
                                         </> : <>
-                                            <li className='text-[12px] text-[#919090] mb-[10px] text-center flex items-center space-x-2'>No data found</li>
+                                            <li className='text-[12px] text-[#919090] text-center flex items-center space-x-2 mb-0'>No data found</li>
                                         </>}
                                     </ul>
                                     {/* <p className='text-[#555555] text-center flex items-center space-x-2'> No data found</p> */}
@@ -232,12 +243,15 @@ function Header_component({ }) {
                             </>}
                         </div>
                     </div>
-                    <div class="flex items-center space-x-[36px] max-[700px]:space-x-4">
+
+
+                    <div className="flex items-center space-x-[36px] max-xl:space-x-4">
                         <div
-                            class={`${menuToggle ? "left-0" : "left-[-100%]"} top-0  z-10 lg:z-0 lg:static fixed flex flex-col lg:items-center gap-[1.5vw] bg-white lg:bg-[transparent] px-5 lg:px-0 py-5 lg:py-0 w-[50%] lg:w-auto max-sm:w-full h-full lg:h-auto duration-500 navLinks`}>
-                            <ul class="flex lg:flex-row flex-col gap-[30px] lg:py-[20px] w-full lg:w-auto">
-                                <li class="flex justify-end lg:hidden w-full">
-                                    <a onClick={(e) => setMenuToggle(!menuToggle)} class="ml-auto w-4 text-[30px] cursor-pointer">
+                            className={`${menuToggle ? "left-0" : "left-[-100%]"} top-0  z-10 lg:z-0 lg:static fixed flex flex-col lg:items-center gap-[1.5vw] bg-white lg:bg-[transparent] px-5 lg:px-0 py-5 lg:py-0 w-[50%] lg:w-auto max-sm:w-full h-full lg:h-auto duration-500 navLinks`}>
+                                
+                            <ul className="flex lg:flex-row flex-col gap-[30px] max-lg:gap-[16px] p-0 w-full lg:w-auto">
+                                <li className="flex justify-end lg:hidden w-full">
+                                    <a onClick={(e) => setMenuToggle(!menuToggle)} className="ml-auto w-4 text-[30px] cursor-pointer">
                                         <img src="/img/modal-close.svg" alt="" />
                                     </a>
                                 </li>
@@ -253,7 +267,7 @@ function Header_component({ }) {
                                                     <Link href={`/`} legacyBehavior>
 
                                                         <a
-                                                            class={val?.categorySlug == header_slug ? "font-medium text-[#120B14] text-lg leading-[27px] active" : "font-medium text-[#120B14] text-base leading-[27px]"} >
+                                                            className={val?.categorySlug == header_slug ? "font-medium text-[#120B14] text-lg leading-[27px] active" : "font-medium text-[#120B14] text-base leading-[27px]"} >
                                                             {val.categoryName}</a>
                                                     </Link>
                                                 </li>
@@ -264,31 +278,35 @@ function Header_component({ }) {
 
                                 </> : <>
                                     {header_api_result?.map((val, i) => (
-                                        <>
-                                            {val?.categoryName == "Best stories" ? <></> : <>
+                                        <React.Fragment key={i}>
+                                            {val?.categoryName == "Best stories" ? null : (
                                                 <li onClick={(e) => handleClick_headerlist(e, val)}>
                                                     <Link href={`/`} legacyBehavior>
-
                                                         <a
-                                                            class={val?.categorySlug == header_slug ? "font-medium text-[#120B14] text-lg leading-[27px] active" : "font-medium text-[#120B14] text-base leading-[27px]"} >
-                                                            {val.categoryName}</a>
+                                                            className={
+                                                                val?.categorySlug == header_slug
+                                                                    ? "font-medium text-[#120B14] text-lg leading-[27px] active"
+                                                                    : "font-medium text-[#120B14] text-base leading-[27px]"
+                                                            }>
+                                                            {val.categoryName}
+                                                        </a>
                                                     </Link>
                                                 </li>
-                                            </>}
-
-                                        </>
+                                            )}
+                                        </React.Fragment>
                                     ))}
+
                                 </>}
                             </ul>
                         </div>
-                        <a href="#"
-                            class="p-[10px_32px] inline-block rounded-[50px] text-base font-semibold leading-[27px]   text-[#FFFFFF] bg-[#120B14] whitespace-nowrap max-md:p-[10px] max-md:leading-none  max-md:text-sm hover:bg-[#28282c] max-sm:!ml-0">
+                        <Link href="/auth/signin"
+                            className="p-[10px_32px] inline-block rounded-[50px] text-base font-semibold leading-[27px]   text-[#FFFFFF] bg-[#120B14] whitespace-nowrap max-md:p-[10px_14px] max-md:leading-none  max-md:text-sm hover:bg-[#28282c] max-sm:!ml-0">
                             join now
-                        </a>
-                        <a onClick={(e) => setMenuToggle(!menuToggle)}
-                            class="w-[24px] max-lg:grid hidden">
-                                 <img src="/img/menu-button.svg" alt="menu" />
-                        </a>
+                        </Link>
+                        <button onClick={(e) => setMenuToggle(!menuToggle)}
+                            className="w-[24px] max-lg:grid hidden">
+                            <img src="/img/menu-button.svg" alt="menu" />
+                        </button>
                     </div>
                 </div>
             </header>
