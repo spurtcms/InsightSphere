@@ -366,17 +366,19 @@ export const GET_SIGNIN_QUERY = `mutation
   }
 `;
 
-export const GET_HEADER_FORGOT_PASSWORD_QUERY = `mutation
+export const GET_HEADER_FORGOT_PASSWORD_QUERY = `mutation 
 forgotPassword($input: MemberInfo!){
-  forgotPassword(input:$input)
-}
-`;
+  forgotPassword(input:$input){
+    message
+  }
+}`;
 
 
 export const GET_RESET_NEW_PASSWORD =`mutation 
 resetPassword($input: MemberResetpassInfo!){
   resetPassword(input:$input)
-}`
+}
+`
   
 
 

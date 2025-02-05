@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchGraphQl } from '@/app/api/graphicql';
 import { data } from 'autoprefixer';
 import { useRouter } from 'next/navigation';
+import { local_Url } from '@/app/api/url';
 
 const Forgot_Password = () => {
     const [emailId, setEmailId] = useState("");
@@ -15,8 +16,7 @@ const Forgot_Password = () => {
     const [validcheck, setValidate] = useState("");
     const [emailErrorshow, setEmailErrorShow] = useState("");
 
-    const [signupTenantId, setSignupTenantId] = useState("");
-    const [signupUserId, setSignupUserId] = useState("");
+    
     const [emailError, setEmailError] = useState("");
     //  const [userErrorShow,setErrorShow]=useState("");
     const [emailSubmit, setEmailSubmit] = useState(0);
@@ -24,42 +24,50 @@ const Forgot_Password = () => {
     const EmailRegex = {
         email: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
     };
-    useEffect(() => {
-        const fetchData = async () => {
-            const variable_list = {
-                "entryFilter": {
-                    "categorySlug": "best-stories"
-                },
-                "commonFilter": {
-                    // "limit": 10,
-                    // "offset": 0
-                },
-                "AdditionalData": {
-                    "categories": true,
-                    "authorDetails": true
-                }
-            };
+    
+    const [signupTenantId, setSignupTenantId] = useState("");
+    const [signupUserId, setSignupUserId] = useState("");
+     
+  useEffect(() => {
+          const fetchData = async () => {
+              const variable_list = {
+                  "entryFilter": {
+                      "categorySlug": "best-stories"
+                  },
+                  "commonFilter": {
+                      // "limit": 10,
+                      // "offset": 0
+                  },
+                  "AdditionalData": {
+                      "categories": true,
+                      "authorDetails": true
+                  }
+              };
+  
+              try {
+  
+                  const FetchValue = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
+                  setSignupTenantId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].tenantId)
+                  setSignupUserId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].createdBy)
+  
+              } catch (error) {
+                  console.error("Error fetching data:", error);
+              }
+          };
+  
+          fetchData();
+      }, []);
 
-            try {
 
-                const FetchValue = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
-                setSignupTenantId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].tenantId)
-                setSignupUserId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].createdBy)
 
-            } catch (error) {
-              
-                console.error("Error fetching data:", error);
-            }
-        };
 
-        fetchData();
-    }, []);
+
+
 
 
 
     const handleVerifyMailId = () => {
-        // console.log("khfkejfekrjfkj")
-
+        console.log("khfkejfekrjfkj")
         setEmailSubmit(1);
         if (validateMailId()) {
 
@@ -69,31 +77,27 @@ const Forgot_Password = () => {
                     "input": {
                         "email": emailId,
                         "tenantId": signupTenantId,
-
+                        "url":local_Url
                     }
-
                 }
-
+                // console.log(signupTenantId,"euirewdnewkufr")
                 try {
                     const forgotPass_Call = await fetchGraphQl(GET_HEADER_FORGOT_PASSWORD_QUERY, password_params);
                     console.log(forgotPass_Call,"whatDAtata")
                     const statusCode = forgotPass_Call.status || 200;
+                    console.log(statusCode,"ckjdwieducnwef")
                     if (statusCode === 200) {
                         console.log("MailRecived:", forgotPass_Call);
 
-                        router.push('/auth/change-password')
+                        // router.push('/auth/change-password')
                     } else {
-                       
-                        // console.log({type:error , message:forgotPass_Call?.data?.message},"kjaweiusncskdf")
                         console.error(`Error: Received status code ${statusCode}`);
                     }
-
-                } 
+                    } 
                 catch (err) {
-                    // setEmailError(err)
-                    // ToastMessage({type:error , message:err?.message})
+                    setEmailError(err)
+// setEmailErrorShow(true)
                     console.log(err, "Mail Error")
-
                 }
             };
             ForgotPasswordData();
@@ -102,9 +106,7 @@ const Forgot_Password = () => {
             console.log("Email is Invalid")
             setEmailError("Invalid Email Please enter valid mailId")
         }
-
     }
-
 
     useEffect(() => {
         if (emailSubmit === 1) {
@@ -135,48 +137,15 @@ const Forgot_Password = () => {
     };
 
     const handleTypingChange = (e) => {
-
         // setEmailId(e);
         const { id, value } = e.target;
-
         if (id == "email") {
             setEmailId(value)
         }
-        else if (id == "tenantId") {
-            setSignupTenantId(value)
-        }
-
-    }
-
-    useEffect(() => {
-        // if(emailId){
-        validate();
+        // else if (id == "tenantId") {
+        //     setSignupTenantId(value)
         // }
-
-
-    }, [emailId])
-
-    const validate = () => {
-
-        let validateObj = {
-            emailVal: false
-        }
-        if (emailId == "") {
-            setEmailError("");
-            validateObj.emailVal = false;
-
-        } else {
-
-           
-        }
-
     }
-
-
-
-
-
-
 
     return (
         <>
@@ -193,7 +162,7 @@ const Forgot_Password = () => {
                             <img src="/img/crumb-arrow.svg" alt="arrow" />
                         </li>
                         <li>
-                            <Link href="/login" className='text-[14px] font-normal leading-4 text-[#151618CC] hover:underline'>
+                            <Link href="/auth/signin" className='text-[14px] font-normal leading-4 text-[#151618CC] hover:underline'>
                                 Login
                             </Link>
                         </li>
