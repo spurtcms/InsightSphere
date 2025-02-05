@@ -229,7 +229,10 @@ const Signin = () => {
                                     <input id="check1" className="cursor-pointer block w-[14px] h-[14px] border-[#00000026] checked:!bg-[#1D1D1F] rounded-[4px] shadow-none !outline-none focus:ring-0 focus:outline-none accent-black" type="checkbox" name="termCheck" />
                                     <label htmlFor="check1" className='text-[12px] font-medium leading-[14px] text-[#151618CC] cursor-pointer'>Remember Password</label>
                                 </div>
-                                <a href="/auth/forgot-password" className='text-[12px] font-medium leading-[14px] text-[#1D1D1F] hover:underline'>Forgot Password ?</a>
+
+                               
+                                <Link href="/auth/forgot-password" className='text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]'> Forgot Password</Link> 
+                                {/* <a href="/auth/forgot-password" className='text-[12px] font-medium leading-[14px] text-[#1D1D1F] hover:underline'>Forgot Password ?</a> */}
                             </div>
                             <button onClick={(e) => submit_signup(e)} className='bg-[#1D1D1F] border border-[#D8D8D8] text-[14px] leading-[16px] p-[12px] w-full block h-[42px] font-semibold text-[#FFFFFF] mt-[32px] rounded-[4px] text-center hover:bg-[#28282c] max-[1300px]:mt-[16px]'>Sign In</button>
                         </div>
