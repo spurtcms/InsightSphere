@@ -24,12 +24,15 @@ const Signup = () => {
     const [signupTenantId, setSignupTenantId] = useState("");
     const [signupUserId, setSignupUserId] = useState("");
     const [hidePassword, setHidePassword] = useState(false);
+
+     const [loginResponse, setLoginResponse] = useState(false);
     
     const router = useRouter();
 
     const signupRegex = {
         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-        email: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
+        email: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/,
+        name: /^[A-Za-z]{3,}$/
     };
 
     useEffect(() => {
@@ -73,8 +76,15 @@ const Signup = () => {
         let isValid = true;
 
         if (signup_Name !== '') {
-            setNameError("");
-            setNameStateError(false);
+           
+            if (!signupRegex.name.test(signup_Name)) {
+                setNameError("Name must be at least 3 characters long");
+                setNameStateError(true);
+                isValid = false;
+            } else {
+                setNameError("");
+                setNameStateError(false);
+            }
         } else {
             setNameError("Name is required.");
             setNameStateError(true);
@@ -132,13 +142,9 @@ const Signup = () => {
                 console.log("register_list", register_list)
                 try {
                     const response = await fetchGraphQl(GET_REGISTER_QUERY, register_list);
-                    const statusCode = response.status || 200;
-                    if (statusCode === 200) {
-                        console.log("Success:", response);
-                        router.push('/auth/signin')
-                    } else {
-                        console.error(`Error: Received status code ${statusCode}`);
-                    }
+                    console.log(" response" ,  response)
+                    setLoginResponse(response)
+                    loginResponse ? router.push("/") : (setEmailError("Email already exists"), setEmailStateError(true));
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -196,14 +202,14 @@ const Signup = () => {
                         <p className='text-base font-medium leading-[17px] text-[#83838D] text-center mb-[40px] max-[1300px]:mb-[16px] max-sm:text-[14px] '>Thank you for choosing us. Give your details</p>
 
                         <div className='bg-[#FFFFFF] border border-[#E9E9E9] p-[30px] rounded-[12px] max-[1300px]:p-[16px]'>
-                            <div className='mb-[24px] last-of-type:mb-0 max-[1300px]:mb-[14px] relative'>
+                            <div className='mb-[24px] last-of-type:mb-0  relative'>
                                 <label className='text-[14px] font-medium leading-[16px] text-[#1D1D1F] block mb-[5px]'>User name</label>
                                 <input placeholder='Eg: Steve Jobs' type="text" className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] placeholder:text-[#1516188F] ${nameStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="name" value={signup_Name} onChange={handleSignup} />
                                 {nameStateError &&
                                     <div className='absolute flex items-start space-x-[4px] mt-[5px]'><img src="/img/error.svg" alt="error" /> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{nameError} </p></div>}
                             </div>
 
-                            <div className='mb-[24px] last-of-type:mb-0 max-[1300px]:mb-[14px] relative'>
+                            <div className='mb-[24px] last-of-type:mb-0  relative'>
                                 <label className='text-[14px] font-medium leading-[16px] text-[#1D1D1F] block mb-[5px]'>Email</label>
                                 <input placeholder='Enter your Email' type="text" className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] placeholder:text-[#1516188F] ${emailStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="email" value={signup_Email} onChange={handleSignup} />
 
@@ -211,10 +217,10 @@ const Signup = () => {
                                     <div className='absolute flex items-start space-x-[4px] mt-[5px]'><img src="/img/error.svg" alt="error" /> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{emailError} </p></div>}
                             </div>
 
-                            <div className='mb-[24px] last-of-type:mb-0 max-[1300px]:mb-[14px] relative'>
+                            <div className='mb-[24px] last-of-type:mb-0  relative'>
                                 <label className='text-[14px] font-medium leading-[16px] text-[#1D1D1F] block mb-[5px]'>Password</label>
                                 <div className='relative flex items-center'>
-                                    <input placeholder="Enter your Password" type={`${hidePassword?"password":"text"}`} className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] placeholder:text-[#1516188F] ${passwordStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="password" value={signup_Password} onChange={handleSignup} />
+                                    <input placeholder="Enter your Password" type={`${hidePassword?"text":"password"}`} className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] placeholder:text-[#1516188F] ${passwordStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="password" value={signup_Password} onChange={handleSignup} />
                                     <button className='absolute right-[10px] p-0' onClick={(e)=>setHidePassword(!hidePassword)}>
                                         <img src="/img/hide-password.svg" alt="password" />
                                     </button>
@@ -223,12 +229,12 @@ const Signup = () => {
                                     <div className=' absolute flex items-start space-x-[4px] mt-[5px]'><img src="/img/error.svg" alt="error" /> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{passwordError} </p></div>}
                             </div>
 
-                            <button onClick={submit_signup} className='bg-[#1D1D1F] border border-[#D8D8D8] text-[14px] leading-[16px] p-[12px] w-full block h-[42px] font-semibold text-[#FFFFFF] mt-[32px] rounded-[4px] text-center hover:bg-[#28282c] max-[1300px]:mt-[16px]'>Getting started</button>
+                            <button onClick={submit_signup} className='bg-[#1D1D1F] border border-[#D8D8D8] text-[14px] leading-[16px] p-[12px] w-full block h-[42px] font-semibold text-[#FFFFFF] mt-[34px] rounded-[4px] text-center hover:bg-[#28282c] '>Getting started</button>
                         </div>
 
                         <div className='flex items-center space-x-[4px] mt-[30px] justify-center max-[1300px]:mt-[16px]'>
                             <p className='text-[12px] font-medium leading-[14px] text-[#1516188F]'>Already have an account?</p>
-                            <Link href="/auth/login" className='text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]'>Log In</Link>
+                            <Link href="/auth/signin" className='text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]'>Log In</Link>
                         </div>
                     </div>
                 </div>

@@ -276,6 +276,7 @@ $commonFilter: Filter
           categoryName
           categorySlug
           description
+          tenantId
         }
       }
     
@@ -356,6 +357,8 @@ $arguments: MemberArguments
 export const GET_SIGNIN_QUERY = `mutation
   memberCheckLogin($input: MemberSignin!){
     memberCheckLogin(input:$input){
+      email
+      password
       message
       token
       success
@@ -364,6 +367,6 @@ export const GET_SIGNIN_QUERY = `mutation
 `;
 
 
-  
+
 
 

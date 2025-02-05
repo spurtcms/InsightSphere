@@ -22,11 +22,11 @@ export default function RootLayout({ children }) {
 
 
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} bg-white`}>
         <CustomProviders>
-          <div class="bg-[#FFF6E3]">
+          <>
             {children}
-          </div>
+          </>
         </CustomProviders>
       </body>
     </html>

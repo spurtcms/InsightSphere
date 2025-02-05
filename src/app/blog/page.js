@@ -10,6 +10,7 @@ import { loadManifestWithRetries } from "next/dist/server/load-components";
 import SkeletonLoader_homepage from "@/components/skeleton/skeletonloader_homepage";
 import { useRouter } from 'next/router';
 import { Skeletonloader_homePage_layout2 } from "@/components/skeleton/Skeletonloader_homePage_layout2";
+import { Skeletonloader_homePage_layout3 } from "@/components/skeleton/Skeletonloader_homePage_layout3";
 
 
 
@@ -28,11 +29,12 @@ const Blog_Index = ({ home_page_description }) => {
     const [Best_stories_api_result, setBest_stories_api_result] = useState([]); // Hydration state
     const [page_loader, setpage_loader] = useState(false)
     const [page_loader_layout_2, setpage_loader_layout_2] = useState(false)
+    const [page_loader_layout_3, setpage_loader_layout_3] = useState(false)
 
 
     // State definitions
     const [startIndex, setStartIndex] = useState(0); // For pagination or load more (if needed)
-    const visibleCount = 4; // Number of items to show per load (adjust as needed)
+    const visibleCount = 1; // Number of items to show per load (adjust as needed)
 
     const [visibleCount_for_list, setvisibleCount_for_list] = useState(6); // Initially show 5 blogs
 
@@ -44,8 +46,6 @@ const Blog_Index = ({ home_page_description }) => {
 
 
     const header_slug = useSelector((s) => s.customerRedux.header_slug)
-
-
 
     useEffect(() => {
         setpage_loader(true)
@@ -94,7 +94,6 @@ const Blog_Index = ({ home_page_description }) => {
             try {
                 console.log("Fetching authors...");
                 const response = await fetchGraphQl(GET_AUTHOR_LIST_QUERY, variable_get_authors_list);
-
                 console.log("Authors fetched successfully:", response);
                 setAuthors_api_result(response); // Update state with the response
             } catch (err) {
@@ -105,12 +104,14 @@ const Blog_Index = ({ home_page_description }) => {
                 console.log("Fetch completed.");
             }
         };
-
-        fetchAuthors();
+        if (BlogCards_layout2_data?.[0]?.tenantId) {
+            fetchAuthors();
+        }
     }, [BlogCards_layout2_data]);
 
 
     useEffect(() => {
+        setpage_loader_layout_3(true)
         const fetchData = async () => {
             try {
                 let variable_list = {
@@ -133,13 +134,16 @@ const Blog_Index = ({ home_page_description }) => {
 
                 const data = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
                 setAll_other_blogs_api_data(data?.ChannelEntriesList?.channelEntriesList); // Set the fetched data into state
-
+                setpage_loader_layout_3(false)
             } catch (error) {
                 console.error('Error fetching data:', error);
+                setpage_loader_layout_3(false)
             }
         };
+if(header_slug){
+    fetchData();
 
-        fetchData();
+}
     }, [header_slug]); // Empty dependency array to run on component mount
 
 
@@ -171,7 +175,6 @@ const Blog_Index = ({ home_page_description }) => {
 
             try {
                 const Best_stories = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
-
                 setBlogCards_layout2_data(Best_stories?.ChannelEntriesList?.channelEntriesList);
 
                 setpage_loader_layout_2(false)
@@ -181,7 +184,10 @@ const Blog_Index = ({ home_page_description }) => {
             }
         };
 
-        fetchData();
+        if(header_slug){
+            fetchData();
+        
+        }
 
     }, [header_slug]);
 
@@ -191,18 +197,25 @@ const Blog_Index = ({ home_page_description }) => {
 
     console.log("Authors_api_result", Authors_api_result)
 
-    const handleNext = () => {
-        if (startIndex + visibleCount < Best_stories_api_result?.length) {
-            setStartIndex(startIndex + 1);
-        }
-        console.log("startIndex", startIndex)
-    };
 
+    //for multi carousel
     const handlePrev = () => {
         if (startIndex > 0) {
-            setStartIndex(startIndex - 1);
+            setStartIndex((prev) => prev - 1);
         }
     };
+
+    const handleNext = () => {
+        // Check if there's still a next card to show
+        if (startIndex + visibleCount < Best_stories_api_result?.length) {
+            setStartIndex((prev) => prev + 1);
+        }
+    };
+
+    // Check if the last card is visible
+    const isLastCardVisible = startIndex + visibleCount >= Best_stories_api_result?.length;
+
+
 
 
     // Function to handle "Load More" button click
@@ -220,6 +233,7 @@ const Blog_Index = ({ home_page_description }) => {
             <head>
                 <title>Blog</title>
             </head>
+
             <div>
                 <Header_component />
 
@@ -232,154 +246,118 @@ const Blog_Index = ({ home_page_description }) => {
                         </h1>
                     </div>
 
-                    <div class="border-[#1516183D] mx-auto px-[16px] pt-[21px] max-[1440px]:pr-0 pb-[107px] max-[1280px]:pb-[40px] border-b border-solid max-w-[1280px]">
-                        <div class="flex justify-between items-center mb-[40px]">
-                            <h4 class="font-normal text-[#151618CC] text-[18px]">Get Started with our <span
-                                class="font-[700]">Best Stories</span></h4>
-                            <div class="flex items-center space-x-1"
-                                style={{ display: Best_stories_api_result?.length > 4 ? "" : "none" }}
+                    <div className="border-[#1516183D] mx-auto px-[16px] pt-[21px] max-[1440px]:pr-0 pb-[107px] max-[1280px]:pb-[40px] border-b border-solid max-w-[1280px]">
+                        <div className="flex justify-between items-center mb-[40px]">
+                            <h4 className="font-normal text-[#151618CC] text-[18px]">
+                                Get Started with our{" "}
+                                <span className="font-[700]">Best Stories</span>
+                            </h4>
+                            <div
+                                className="flex items-center space-x-1 max-[1440px]:pr-[16px]"
+                                style={{
+                                    display: Best_stories_api_result?.length > 1 ? "" : "none",
+                                }}
                             >
                                 <a
-                                    onClick={(e) => handlePrev(e)}
+                                    onClick={handlePrev}
                                     disabled={startIndex === 0}
-
-                                    style={{ cursor: startIndex > 0 ? "pointer" : "default" }}
-
+                                    style={{
+                                        cursor: startIndex > 0 ? "pointer" : "default",
+                                    }}
                                 >
-                                    {startIndex > 0 ? <>
-                                        <img src="img/arrow-left-line.svg" alt="" />
-                                    </> : <>
-                                        <img src="img/arrow-left-disable.svg" alt="" />
-                                    </>}
-
+                                    <img
+                                        src={
+                                            startIndex > 0
+                                                ? "img/arrow-left-line.svg"
+                                                : "img/arrow-left-disable.svg"
+                                        }
+                                        alt="Previous"
+                                    />
                                 </a>
                                 <a
-                                    onClick={(e) => handleNext(e)}
+                                    onClick={handleNext}
                                     disabled={startIndex + visibleCount >= Best_stories_api_result?.length}
-
                                     style={{
-                                        cursor:
-                                            startIndex + visibleCount < Best_stories_api_result?.length ? "pointer" : "default",
+                                        cursor: startIndex + visibleCount < Best_stories_api_result?.length ? "pointer" : "default",
                                     }}
-
-
                                 >
-                                    {startIndex + visibleCount < Best_stories_api_result?.length ? <>
-                                        <img src="img/arrow-right-line.svg" alt="" />
-                                    </> : <>
-                                        <img src="img/arrow-right-disable.svg" alt="" />
-                                    </>}
-
+                                    <img
+                                        src={
+                                            startIndex + visibleCount < Best_stories_api_result?.length
+                                                ? "img/arrow-right-line.svg"
+                                                : "img/arrow-right-disable.svg"
+                                        }
+                                        alt="Next"
+                                    />
                                 </a>
                             </div>
                         </div>
 
-                        {page_loader ?
-                            <>
-                                <SkeletonLoader_homepage />
-                            </> :
-                            <>
-
-
-
-                                {[undefined, null, 0, ""].includes(Best_stories_api_result?.length) ? <>
-                                    <>
-                                        <div class="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
-                                            <div className="flex items-center justify-center ">
-                                                <p className="text-xl font-semibold text-[#151618CC] text-center">
-                                                    No data found
-                                                </p>
+                        {Best_stories_api_result?.length <= 0 ? (
+                            <div className="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
+                                <div className="flex space-x-[28px] items-center justify-center">
+                                    <p className="text-xl font-semibold text-[#151618CC] text-center">
+                                        No data found
+                                    </p>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex space-x-[28px] scroll-invisible overflow-hidden">
+                                <div
+                                    className="flex space-x-[28px] transition-transform duration-300"
+                                    style={{
+                                        transform: `translateX(-${startIndex * 388}px)`, // Adjust based on card width
+                                    }}
+                                >
+                                    {Best_stories_api_result?.map((val, i) => (
+                                        <a key={i} href={`/blog/${val?.slug}`} className="w-[360px] min-w-[360px]  group">
+                                            <div className="relative mb-[35px] rounded-[24px] w-full overflow-hidden">
+                                                <img
+                                                    src={val?.coverImage}
+                                                    alt={val?.title}
+                                                    className="group-hover:scale-[1.1] rounded-[24px] w-full transition-all h-[418px] object-cover"
+                                                    onError={({ currentTarget }) => {
+                                                        currentTarget.onerror = null;
+                                                        currentTarget.src = "/img/no-image.png";
+                                                    }}
+                                                />
+                                                <div className="bottom-[15px] left-[15px] absolute flex items-center -space-x-3">
+                                                    <div className="inline-block relative border-2 border-white rounded-full w-[28px] h-[28px] object-center object-cover">
+                                                        <img
+                                                            src={val?.authorDetails?.profileImagePath}
+                                                            alt={`${val?.firstName} ${val?.lastName}`}
+                                                            onError={({ currentTarget }) => {
+                                                                currentTarget.onerror = null;
+                                                                currentTarget.src = "/img/no-image.png";
+                                                            }}
+                                                            style={{ borderRadius: "50%" }}
+                                                        />
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
-
-                                    </>
-                                </> :
-                                    <div class="flex space-x-[28px] scroll-invisible overflow-hidden ">
-                                        <>
-                                            {Best_stories_api_result?.slice(startIndex, startIndex + visibleCount).map((val, i) => (
-                                                <>
-                                                    <a href={`/blog/${val?.slug}`} class="w-[360px] min-w-[360px] group" >
-                                                        <div class="relative mb-[35px] rounded-[24px] w-full overflow-hidden">
-                                                            <img src={val?.coverImage} alt={val?.title}
-                                                                class="group-hover:scale-[1.1] rounded-[24px] w-full h-auto transition-all h-[418px]"
-                                                                onError={({ currentTarget }) => {
-                                                                    currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
-                                                                    currentTarget.src = "/img/no-image.png";  // Fallback to a default image
-                                                                }}
-                                                                style={{ width: "360px", height: "418px" }}
-                                                            />
-                                                            <div class="bottom-[15px] left-[15px] absolute flex items-center -space-x-3">
-                                                                <div
-                                                                    class="inline-block relative border-2 border-white rounded-full w-[28px] h-[28px] object-center object-cover">
-                                                                    <img src={image_url + val?.authorDetails?.profileImagePath} alt={`${val?.firstName} ${val?.lastName}`}
-                                                                        onError={({ currentTarget }) => {
-                                                                            currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
-                                                                            currentTarget.src = "/img/no-image.png";  // Fallback to a default image
-                                                                        }}
-                                                                        style={{ borderRadius: "50%" }}
-                                                                    />
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex flex-wrap gap-[6px] mb-[18px]">
-
-                                                            {val?.categories?.[0]?.map((val, i) => (
-                                                                <>
-                                                                    {val?.categoryName == "Blog" ? <></> : <>
-                                                                        <div class="flex items-center bg-[#EFEEF0] px-[12px] rounded-[50px] h-[28px]">
-                                                                            <span class="font-normal text-[#120B14] text-sm">{val?.categoryName}</span>
-                                                                        </div>
-
-                                                                    </>}
-
-
-
-
-                                                                </>
-                                                            ))}
-
-                                                        </div>
-                                                        <h3 class="mb-[12px] font-[700] text-[24px] text-[#151618]">
-                                                            {val?.title}
-                                                        </h3>
-
-                                                        {val?.description ? (
-                                                            <p
-                                                                class="line-clamp-4 font-inter font-normal text-[#131313] text-base leading-[24px]"
-                                                                dangerouslySetInnerHTML={{
-                                                                    __html: val?.description
-                                                                        ?.replaceAll("<br>", " ") // Replace <br> tags with spaces
-                                                                        .replaceAll(/<div class="card[^"]*"(.*?)<\/div>/g, '') // Remove specific <div> tags
-                                                                        .replaceAll(/<img[^>]*>/g, "") // Remove all <img> tags
-                                                                        .replace(/p-\[24px_60px_10px\]/g, "") // Remove specific styles
-                                                                        .replace(/<\/?[^>]+(>|$)/g, "") // Remove all remaining HTML tags
-                                                                        .split(/\s+/) // Split text into words
-                                                                        .slice(0, 35) // Limit to the first 100 words
-                                                                        .join(" ") // Join the words back into a string
-                                                                        .concat("...") // Add ellipsis if text is truncated
-                                                                    // .substring(0, 100) // Take the first 1000 characters (approx. for 100 words)
-
-                                                                }}
-                                                            ></p>
-
-                                                        ) : (
-                                                            <></>
-                                                        )}
-
-
-                                                    </a>
-
-                                                </>
-                                            ))}
-                                        </>
-                                    </div>
-                                }
-
-                            </>
-                        }
-
+                                            <h3 className="mb-[12px] font-[700] text-[24px] text-[#151618]">
+                                                {val?.title}
+                                            </h3>
+                                            {val?.description && (
+                                                <p
+                                                    className="line-clamp-4 font-inter font-normal text-[#131313] text-base leading-[24px]"
+                                                    dangerouslySetInnerHTML={{
+                                                        __html: val?.description
+                                                            ?.replaceAll("<br>", " ")
+                                                            ?.replace(/<\/?[^>]+(>|$)/g, "")
+                                                            ?.split(/\s+/)
+                                                            ?.slice(0, 35)
+                                                            ?.join(" ") + "...",
+                                                    }}
+                                                ></p>
+                                            )}
+                                        </a>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
                     </div>
+
 
                     <div
                         class="border-[#1516183D] mx-auto px-4 pt-[49px] pb-[74px] max-[1280px]:pb-[32px] border-b border-solid max-w-[1280px]">
@@ -420,90 +398,106 @@ const Blog_Index = ({ home_page_description }) => {
                         {page_loader_layout_2 ? <>
                             <Skeletonloader_homePage_layout2 />
                         </> : <>
-                            <div
-                                class="gap-[22px] grid grid-cols-3 max-[530px]:grid-cols-1 max-[680px]:grid-cols-2 mb-[74px] max-[1280px]:mb-[32px]">
 
-                                {BlogCards_layout2_data?.slice(0, visibleCount_for_list)?.map((val, index) => (
+                            {[undefined, null, 0, ""].includes(BlogCards_layout2_data?.length) ?
+                                <>
+                                    <div class="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
+                                        <div className="flex items-center justify-center ">
+                                            <p className="text-xl font-semibold text-[#151618CC] text-center">
+                                                No data found
+                                            </p>
+                                        </div>
+                                    </div>
 
-                                    <>
-                                        <a href={`/blog/${val?.slug}`} class="w-full group">
-                                            <div class="relative mb-[35px] rounded-[24px] w-full overflow-hidden">
-                                                <img src={val?.coverImage} alt={val?.title}
-                                                    class="group-hover:scale-[1.1] rounded-[24px] w-full h-auto transition-all h-[418px]"
-                                                    onError={({ currentTarget }) => {
-                                                        currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
-                                                        currentTarget.src = "/img/no-image.png";  // Fallback to a default image
-                                                    }}
-                                                    style={{ width: "360px", height: "418px" }}
-                                                />
+                                </> :
 
-                                                <div class="bottom-[15px] left-[15px] absolute flex items-center -space-x-3">
-                                                    <div
-                                                        class="inline-block relative border-2 border-white rounded-full w-[40px] h-[40px] object-center object-cover ">
-                                                        <img src={image_url + val?.authorDetails?.profileImagePath} alt={`${val?.firstName} ${val?.lastName}`}
-                                                            onError={({ currentTarget }) => {
-                                                                currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
-                                                                currentTarget.src = "/img/no-image.png";  // Fallback to a default image
-                                                            }}
-                                                            style={{ borderRadius: "50%" }}
-                                                        />
-                                                    </div>
-                                                    {/* <div
+                                <>
+                                    <div
+                                        class="gap-[22px] grid grid-cols-3 max-[530px]:grid-cols-1 max-[680px]:grid-cols-2 mb-[74px] max-[1280px]:mb-[32px]">
+
+                                        {
+                                            BlogCards_layout2_data?.slice(0, visibleCount_for_list)?.map((val, index) => (
+
+                                                <>
+                                                    <a href={`/blog/${val?.slug}`} class="w-full group">
+                                                        <div class="relative mb-[35px] rounded-[24px] w-full overflow-hidden">
+                                                            <img src={val?.coverImage} alt={val?.title}
+                                                                class="group-hover:scale-[1.1] rounded-[24px] w-full transition-all h-[418px] object-cover"
+                                                                onError={({ currentTarget }) => {
+                                                                    currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
+                                                                    currentTarget.src = "/img/no-image.png";  // Fallback to a default image
+                                                                }}
+                                                            />
+
+                                                            <div class="bottom-[15px] left-[15px] absolute flex items-center -space-x-3">
+                                                                <div
+                                                                    class="inline-block relative border-2 border-white rounded-full w-[40px] h-[40px] object-center object-cover ">
+                                                                    <img src={image_url + val?.authorDetails?.profileImagePath} alt={`${val?.firstName} ${val?.lastName}`}
+                                                                        onError={({ currentTarget }) => {
+                                                                            currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
+                                                                            currentTarget.src = "/img/no-image.png";  // Fallback to a default image
+                                                                        }}
+                                                                        style={{ borderRadius: "50%" }}
+                                                                    />
+                                                                </div>
+                                                                {/* <div
                                                     class="inline-block relative border-2 border-white rounded-full w-[40px] h-[40px] object-center object-cover">
                                                     <img src="img/stack-3.png" alt="" />
                                                 </div> */}
-                                                </div>
-                                            </div>
-                                            <div class="flex flex-wrap gap-[6px] mb-[18px]">
-
-                                                {val?.categories?.[0]?.map((val, i) => (
-                                                    <>
-                                                        {val?.categoryName == "Blog" ? <></> : <>
-                                                            <div class="flex items-center bg-[#EFEEF0] px-[12px] rounded-[50px] h-[28px]">
-                                                                <span class="font-normal text-[#120B14] text-sm">{val?.categoryName}</span>
                                                             </div>
+                                                        </div>
+                                                        <div class="flex flex-wrap gap-[6px] mb-[18px]">
 
-                                                        </>}
+                                                            {val?.categories?.[0]?.map((val, i) => (
+                                                                <>
+                                                                    {val?.categoryName == "Blog" ? <></> : <>
+                                                                        <div class="flex items-center bg-[#EFEEF0] px-[12px] rounded-[50px] h-[28px]">
+                                                                            <span class="font-normal text-[#120B14] text-sm">{val?.categoryName}</span>
+                                                                        </div>
 
-
-
-                                                    </>
-                                                ))}
-
-                                            </div>
-                                            <h3 class="mb-[12px] font-[700] text-[24px] text-[#151618]">
-                                                {val?.title}
-                                            </h3>
-
-                                            {val?.description ? (
-                                                <p
-                                                    class="line-clamp-4 font-inter font-normal text-[#131313] text-base leading-[24px]"
-                                                    dangerouslySetInnerHTML={{
-                                                        __html: val?.description
-                                                            ?.replaceAll("<br>", " ") // Replace <br> tags with spaces
-                                                            .replaceAll(/<div class="card[^"]*"(.*?)<\/div>/g, '') // Remove specific <div> tags
-                                                            .replaceAll(/<img[^>]*>/g, "") // Remove all <img> tags
-                                                            .replace(/p-\[24px_60px_10px\]/g, "") // Remove specific styles
-                                                            .replace(/<\/?[^>]+(>|$)/g, "") // Remove all remaining HTML tags
-                                                            .split(/\s+/) // Split text into words
-                                                            .slice(0, 35) // Limit to the first 100 words
-                                                            .join(" ") // Join the words back into a string
-                                                            .concat("...") // Add ellipsis if text is truncated
-                                                        // .substring(0, 100) // Take the first 1000 characters (approx. for 100 words)
-
-                                                    }}
-                                                ></p>
-
-                                            ) : (
-                                                <></>
-                                            )}
+                                                                    </>}
 
 
-                                        </a>
 
-                                    </>
-                                ))}
-                            </div>
+                                                                </>
+                                                            ))}
+
+                                                        </div>
+                                                        <h3 class="mb-[12px] font-[700] text-[24px] text-[#151618]">
+                                                            {val?.title}
+                                                        </h3>
+
+                                                        {val?.description ? (
+                                                            <p
+                                                                class="line-clamp-4 font-inter font-normal text-[#131313] text-base leading-[24px]"
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: val?.description
+                                                                        ?.replaceAll("<br>", " ") // Replace <br> tags with spaces
+                                                                        .replaceAll(/<div class="card[^"]*"(.*?)<\/div>/g, '') // Remove specific <div> tags
+                                                                        .replaceAll(/<img[^>]*>/g, "") // Remove all <img> tags
+                                                                        .replace(/p-\[24px_60px_10px\]/g, "") // Remove specific styles
+                                                                        .replace(/<\/?[^>]+(>|$)/g, "") // Remove all remaining HTML tags
+                                                                        .split(/\s+/) // Split text into words
+                                                                        .slice(0, 35) // Limit to the first 100 words
+                                                                        .join(" ") // Join the words back into a string
+                                                                        .concat("...") // Add ellipsis if text is truncated
+                                                                    // .substring(0, 100) // Take the first 1000 characters (approx. for 100 words)
+
+                                                                }}
+                                                            ></p>
+
+                                                        ) : (
+                                                            <></>
+                                                        )}
+
+
+                                                    </a>
+
+                                                </>
+                                            ))}
+                                    </div>
+                                </>
+                            }
                         </>}
                         <div class="flex justify-center">
 
@@ -519,35 +513,60 @@ const Blog_Index = ({ home_page_description }) => {
 
                         </div>
                     </div>
+
+
                     <div class="border-[#1516183D] mx-auto px-4 pt-[24px] pb-[43px] border-b border-solid max-w-[1280px]">
                         <h3 class="mb-[32px] font-[700] text-[#120B14] text-[20px]">Recommended</h3>
-                        <div
-                            class="gap-[13px] grid grid-cols-5 max-[410px]:grid-cols-1 max-[560px]:grid-cols-2 max-[860px]:grid-cols-3 mb-[84px] max-[1280px]:mb-[32px]">
+                        {page_loader_layout_3 ? <>
+                            <Skeletonloader_homePage_layout3 />
+                        </> : <>
 
-                            {All_other_blogs_api_data?.slice(0, 5)?.map((val, i) => (
+                            {[undefined, null, 0, ""].includes(All_other_blogs_api_data?.length) ?
                                 <>
-
-                                    <a href={`/blog/${val?.slug}`} class="group">
-                                        <div class="mb-[27px] rounded-[24px] w-full overflow-hidden">
-
-                                            <img src={val?.coverImage} alt={val?.title}
-                                                class="group-hover:scale-[1.1] grop-hover:scale-50 rounded-[24px] transition-all"
-                                                onError={({ currentTarget }) => {
-                                                    currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
-                                                    currentTarget.src = "/img/no-image.png";  // Fallback to a default image
-                                                }}
-                                                style={{ width: "240px", height: "278px" }}
-                                            />
-
+                                    <div class="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
+                                        <div className="flex items-center justify-center ">
+                                            <p className="text-xl font-semibold text-[#151618CC] text-center">
+                                                No data found
+                                            </p>
                                         </div>
-                                        <h3 class="font-[700] text-[#151618] text-[18px]">
-                                            {val?.title}
-                                        </h3>
-                                    </a>
+                                    </div>
 
+                                </> :
+
+                                <>
+                                    <div
+                                        class="gap-[13px] grid grid-cols-5 max-[410px]:grid-cols-1 max-[560px]:grid-cols-2 max-[860px]:grid-cols-3 mb-[84px] max-[1280px]:mb-[32px]">
+
+                                        {
+
+
+                                            All_other_blogs_api_data?.slice(0, 5)?.map((val, i) => (
+                                                <>
+
+                                                    <a href={`/blog/${val?.slug}`} class="group">
+                                                        <div class="mb-[27px] rounded-[24px] w-full overflow-hidden">
+
+                                                            <img src={val?.coverImage} alt={val?.title}
+                                                                class="group-hover:scale-[1.1] grop-hover:scale-50 rounded-[24px] transition-all"
+                                                                onError={({ currentTarget }) => {
+                                                                    currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
+                                                                    currentTarget.src = "/img/no-image.png";  // Fallback to a default image
+                                                                }}
+                                                                style={{ width: "240px", height: "278px", objectFit: "cover" }}
+                                                            />
+
+                                                        </div>
+                                                        <h3 class="font-[700] text-[#151618] text-[18px]">
+                                                            {val?.title}
+                                                        </h3>
+                                                    </a>
+
+                                                </>
+                                            ))}
+                                    </div>
                                 </>
-                            ))}
-                        </div>
+                            }
+                        </>}
                     </div>
                 </section>
 
