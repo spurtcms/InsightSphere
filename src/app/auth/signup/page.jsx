@@ -177,10 +177,10 @@ const Signup = () => {
                 <title>Signup</title>
             </head>
             <Header_component />
-            <section className='bg-[#FAFAFA] min-h-[calc(100vh-120px)] p-[26px_16px] flex flex-col
+            <section className='bg-[#FAFAFA] min-h-[calc(100vh-120px)] p-[16px] flex flex-col
              max-md:min-h-[calc(100vh-68px)] max-xl:min-h-[calc(100vh-79px)] max-[1300px]:p-[16px]'>
-                <div className='w-[90%] mx-auto max-[1400px]:w-full mb-[27px] max-[1300px]:mb-[14px]'>
-                    <ul className='flex space-x-1 items-center'>
+                <div className='w-[90%] mx-auto max-[1400px]:w-full max-[1600px]:mb-auto mb-0'>
+                    <ul className='flex space-x-1 items-center mb-[24px] max-[1300px]:mb-[14px] '>
                         <li>
                             <a href="/">
                                 <img src="/img/home.svg" alt="home" />
@@ -198,8 +198,8 @@ const Signup = () => {
                 </div>
                 <div className='w-[90%] mx-auto max-[1400px]:w-full '>
                     <div className='max-w-[394px] mx-auto'>
-                        <h1 className='text-[36px] font-semibold leading-[43px] text-[#1D1D1F] text-center mb-[17px] max-sm:text-[24px] max-[1300px]:mb-[8px] max-[1300px]:text-[32px] max-[1300px]:leading-none '>Create an account</h1>
-                        <p className='text-base font-medium leading-[17px] text-[#83838D] text-center mb-[40px] max-[1300px]:mb-[16px] max-sm:text-[14px] '>Thank you for choosing us. Give your details</p>
+                        <h1 className='text-[36px] font-semibold leading-none text-[#1D1D1F] text-center mb-[16px] max-sm:text-[24px] max-[1300px]:mb-[8px] max-[1300px]:text-[32px] max-[1300px]:leading-none '>Create an account</h1>
+                        <p className='text-base font-medium leading-[17px] text-[#83838D] text-center mb-[24px] max-[1300px]:mb-[16px] max-sm:text-[14px] '>Thank you for choosing us. Give your details</p>
 
                         <div className='bg-[#FFFFFF] border border-[#E9E9E9] p-[30px] rounded-[12px] max-[1300px]:p-[16px]'>
                             <div className='mb-[24px] last-of-type:mb-0  relative'>
@@ -232,7 +232,7 @@ const Signup = () => {
                             <button onClick={submit_signup} className='bg-[#1D1D1F] border border-[#D8D8D8] text-[14px] leading-[16px] p-[12px] w-full block h-[42px] font-semibold text-[#FFFFFF] mt-[34px] rounded-[4px] text-center hover:bg-[#28282c] '>Getting started</button>
                         </div>
 
-                        <div className='flex items-center space-x-[4px] mt-[30px] justify-center max-[1300px]:mt-[16px]'>
+                        <div className='flex items-center space-x-[4px] mt-[16px] justify-center max-[1300px]:mt-[16px]'>
                             <p className='text-[12px] font-medium leading-[14px] text-[#1516188F]'>Already have an account?</p>
                             <Link href="/auth/signin" className='text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]'>Log In</Link>
                         </div>

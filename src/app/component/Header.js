@@ -17,7 +17,7 @@ function Header_component({ }) {
     const pathname = usePathname();
 
     useEffect(() => {
-        const loginPath = ["/auth/signup", "/auth/signin"];
+        const loginPath = ["/auth/signup", "/auth/signin" , "/auth/reset-password" , "/auth/forgot-password" , "/auth/change-password" , "/change-password"];
         setLogin_Header(loginPath.includes(pathname));
     }, [pathname]); // Determines login header state
 
@@ -185,6 +185,9 @@ function Header_component({ }) {
 
     }
 
+    console.log("headerapi_result_redux" , headerapi_result_redux)
+    console.log("header_slug" , header_slug)
+
     return (
         <>
             <header className="p-[36px_16px] h-[120px] max-md:h-[68px] max-xl:h-[79px]  max-xl:p-[16px] bg-white">
@@ -228,7 +231,7 @@ function Header_component({ }) {
                                                 <>
                                                     {/* <Link href={`/blog/${val?.slug}`} legacyBehavior> */}
 
-                                                    <li key={item.id || index} className='text-[12px] font-medium mb-[10px] cursor-pointer last-of-type:mb-0'
+                                                    <li key={i} className='text-[12px] font-medium mb-[10px] cursor-pointer last-of-type:mb-0'
                                                         onClick={(e) => handleClick_keyword(e, val)}
                                                     >{val?.title}</li>
                                                     {/* </Link> */}
@@ -261,7 +264,7 @@ function Header_component({ }) {
                                     {headerapi_result_redux?.map((val, i) => (
                                         <>
 
-                                            {val?.categoryName == "Best stories" ? <></> : <>
+                                            {val?.categoryName == "Best stories" ? <> </> : <>
 
                                                 <li onClick={(e) => handleClick_headerlist(e, val)}>
                                                     <Link href={`/`} legacyBehavior>
@@ -274,7 +277,6 @@ function Header_component({ }) {
                                             </>}
                                         </>
                                     ))}
-
 
                                 </> : <>
                                     {header_api_result?.map((val, i) => (
