@@ -24,27 +24,15 @@ const NewPassword = () => {
     const PasswordRegex = {
         password: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
     }
-    // const router=useRouter()
-    // const {token}=router.query
+    const router=useRouter()
+   
 
     const params = useSearchParams()
     const token = params.get("token")
-    // const query = new URLSearchParams(pathname);
-    // const token = query.get('token')
-    // console.log(token)//123
-
-    // const pathname = usePathname()
-    // console.log(pathname,"sdkjfieufjsnd")
-    // const token = pathname.split('?').at(-1)
+   
     console.log(token, "tokendesr")
 
-    // useEffect(()=>{
-
-    //     if(token !== undefined){
-
-    //     }
-
-    // },[token])
+  
     useEffect(() => {
         const fetchData = async () => {
             const variable_list = {
@@ -195,9 +183,38 @@ const NewPassword = () => {
 
 
     return (
-        <div>
+    <>
             {/* new password */}
             <Auth_Header />
+
+            <section className='bg-[#FAFAFA] min-h-[calc(100vh-120px)] p-[26px_16px] flex flex-col max-md:min-h-[calc(100vh-68px)] max-[1300px]:min-h-[calc(100vh-79px)] max-[1300px]:p-[16px]'>
+                <div className='w-[90%] mx-auto max-[1400px]:w-full mb-auto'>
+                    <ul className='flex space-x-1 mb-[55px] max-[1300px]:mb-[24px] items-center'>
+                        <li>
+                            <Link href="/">
+                                <img src="/img/home.svg" alt="home" />
+                            </Link>
+                        </li>
+                        <li>
+                            <img src="/img/crumb-arrow.svg" alt="arrow" />
+                        </li>
+                        <li>
+                            <Link href="/auth/signin" className='text-[14px] font-normal leading-4 text-[#151618CC] hover:underline'>
+                                Login
+                            </Link>
+                        </li>
+                        <li>
+                            <img src="/img/crumb-arrow.svg" alt="arrow" />
+                        </li>
+                        <li>
+                            <p className='text-[14px] font-semibold leading-4 text-[#120B14] '>
+                               Change password
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+
+
             <div className='max-w-[394px] mx-auto mb-[24px]'>
                 <h1 className='text-[36px] font-semibold leading-[43px] text-[#1D1D1F] text-center mb-[17px] max-sm:text-[28px]'>Set New Password</h1>
                 <p className='text-base font-medium leading-[17px] text-[#83838D] text-center mb-[40px] max-[1300px]:mb-[16px]'>Your new password must be different to previously passwords </p>
@@ -244,7 +261,9 @@ const NewPassword = () => {
                 <div className="flex items-center space-x-[4px] mt-[30px] justify-center max-[1300px]:mt-[16px]"><p className="text-[12px] font-medium leading-[14px] text-[#1516188F]">Back to</p><Link href="/auth/signin" className="text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]">Login</Link></div>
 
             </div>
-        </div>
+      
+        </section>
+        </>
     )
 
 }
