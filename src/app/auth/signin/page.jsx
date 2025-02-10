@@ -181,8 +181,8 @@ const Signin = () => {
 
             <Header_component />
             <section className='bg-[#FAFAFA] min-h-[calc(100vh-120px)] p-[26px_16px] flex flex-col max-md:min-h-[calc(100vh-68px)] max-[1300px]:p-[16px] max-[1300px]:min-h-[calc(100vh-79px)]'>
-                <div className='w-[90%] mx-auto max-[1400px]:w-full'>
-                    <ul className='flex space-x-1 mb-[55px] max-[1300px]:mb-[24px] items-center'>
+                <div className='w-[90%] mx-auto max-[1400px]:w-full max-[1600px]:mb-auto mb-0'>
+                    <ul className='flex space-x-1 mb-[24px] items-center'>
                         <li>
                             <a href="/">
                                 <img src="/img/home.svg" alt="home" />
@@ -200,10 +200,10 @@ const Signin = () => {
                         </li>
                     </ul>
                 </div>
-                <div className='w-[90%] mx-auto max-[1400px]:w-full '>
+                <div className='w-[90%] mx-auto max-[1400px]:w-full  mb-auto'>
                     <div className='max-w-[394px] mx-auto'>
-                        <h1 className='text-[36px] font-semibold leading-[43px] text-[#1D1D1F] text-center mb-[17px] max-sm:text-[28px] max-[1300px]:mb-[10px]'>Log in to your account</h1>
-                        <p className='text-base font-medium leading-[17px] text-[#83838D] text-center mb-[40px] max-[1300px]:mb-[16px]'>Welcome back! Please enter your details.</p>
+                        <h1 className='text-[36px] font-semibold leading-[43px] text-[#1D1D1F] text-center mb-[16px] max-sm:text-[28px] max-[1300px]:mb-[10px]'>Log in to your account</h1>
+                        <p className='text-base font-medium leading-[17px] text-[#83838D] text-center mb-[24px] max-[1300px]:mb-[16px]'>Welcome back! Please enter your details.</p>
                         <div className='bg-[#FFFFFF] border border-[#E9E9E9] p-[30px] rounded-[12px]'>
                             <div className='mb-[24px] last-of-type:mb-0 relative'>
                                 <label className='text-[14px] font-medium leading-[16px] text-[#1D1D1F] block mb-[5px]'>Email</label>
