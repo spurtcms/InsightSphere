@@ -1,6 +1,6 @@
 # Blog generated using spurtCMS with Next.js 
 
-![Screenshot of spurtCMS using Presentation Tool to do Visual Editing]()
+![Screenshot of spurtCMS using Presentation Tool to do Visual Editing](https://dev.spurtcms.com/public/img/Cover%20image%20-%20Stories.jpg)
 
 
 This sample blog is an excellent starting point to explore Next.js and spurtcms [spurtcms](https://dev.spurtcms.com). Get it up and running in minutes. Modify and adapt it to your liking;
