@@ -1,5 +1,5 @@
 "use client"
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GET_AUTHOR_LIST_QUERY, GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUERY } from "../api/query";
 import { fetchGraphQl } from "../api/graphicql";
 import Header_component from "../component/Header";
@@ -11,6 +11,7 @@ import SkeletonLoader_homepage from "@/components/skeleton/skeletonloader_homepa
 import { useRouter } from 'next/router';
 import { Skeletonloader_homePage_layout2 } from "@/components/skeleton/Skeletonloader_homePage_layout2";
 import { Skeletonloader_homePage_layout3 } from "@/components/skeleton/Skeletonloader_homePage_layout3";
+import useCarousel from "@/components/customComponent/useCarousel";
 
 
 
@@ -31,7 +32,7 @@ const Blog_Index = ({ home_page_description }) => {
     const [page_loader_layout_2, setpage_loader_layout_2] = useState(false)
     const [page_loader_layout_3, setpage_loader_layout_3] = useState(false)
 
-console.log(Best_stories_api_result,"beststories")
+    console.log(Best_stories_api_result, "beststories")
     // State definitions
     const [startIndex, setStartIndex] = useState(0); // For pagination or load more (if needed)
     const visibleCount = 3; // Number of items to show per load (adjust as needed)
@@ -44,6 +45,7 @@ console.log(Best_stories_api_result,"beststories")
     const [loading, setLoading] = useState(false); // Loading state
     const [error, setError] = useState(null); // Error state
 
+    const {sliderRef ,  canScrollLeft , canScrollRight , scrollLeft , scrollRight} = useCarousel();
 
     const header_slug = useSelector((s) => s.customerRedux.header_slug)
 
@@ -77,7 +79,6 @@ console.log(Best_stories_api_result,"beststories")
 
         fetchData();
     }, []);
-
 
     // Fetch author list on component mount
     useEffect(() => {
@@ -140,12 +141,11 @@ console.log(Best_stories_api_result,"beststories")
                 setpage_loader_layout_3(false)
             }
         };
-if(header_slug){
-    fetchData();
+        if (header_slug) {
+            fetchData();
 
-}
+        }
     }, [header_slug]); // Empty dependency array to run on component mount
-
 
 
     useEffect(() => {
@@ -184,39 +184,17 @@ if(header_slug){
             }
         };
 
-        if(header_slug){
+        if (header_slug) {
             fetchData();
-        
+
         }
 
     }, [header_slug]);
 
 
-
     if (!isHydrated) return null; // Avoid rendering until hydration
 
     console.log("Authors_api_result", Authors_api_result)
-
-
-    //for multi carousel
-    const handlePrev = () => {
-        if (startIndex > 0) {
-            setStartIndex((prev) => prev - 1);
-        }
-    };
-
-    const handleNext = () => {
-        // Check if there's still a next card to show
-        if (startIndex + visibleCount < Best_stories_api_result?.length) {
-            setStartIndex((prev) => prev + 1);
-        }
-    };
-
-    // Check if the last card is visible
-    const isLastCardVisible = startIndex + visibleCount >= Best_stories_api_result?.length;
-
-
-
 
     // Function to handle "Load More" button click
     const handleLoadMore = () => {
@@ -224,9 +202,6 @@ if(header_slug){
         setvisibleCount_for_list((prevCount) => prevCount + 3); // Load next 5
 
     };
-
-
-
 
     return (
         <>
@@ -253,40 +228,27 @@ if(header_slug){
                                 <span className="font-[700]">Best Stories</span>
                             </h4>
                             <div
-                                className="flex items-center space-x-1 max-[1440px]:pr-[16px]"
+                                className="flex items-center space-x-1 max-[1440px]:pr-[16px] max-sm:hidden"
                                 style={{
                                     display: Best_stories_api_result?.length > 1 ? "" : "none",
                                 }}
                             >
                                 <a
-                                    onClick={handlePrev}
-                                    disabled={startIndex === 0}
-                                    style={{
-                                        cursor: startIndex > 0 ? "pointer" : "default",
-                                    }}
+                                    onClick={scrollLeft}
+                                    className={`cursor-pointer ${!canScrollLeft && 'pointer-events-none'}`}
                                 >
                                     <img
-                                        src={
-                                            startIndex > 0
-                                                ? "img/arrow-left-line.svg"
-                                                : "img/arrow-left-disable.svg"
-                                        }
+                                        src={canScrollLeft ? "img/arrow-left-line.svg" : "img/arrow-left-disable.svg"}
                                         alt="Previous"
                                     />
                                 </a>
+
                                 <a
-                                    onClick={handleNext}
-                                    disabled={startIndex + visibleCount >= Best_stories_api_result?.length}
-                                    style={{
-                                        cursor: startIndex + visibleCount < Best_stories_api_result?.length ? "pointer" : "default",
-                                    }}
+                                    onClick={scrollRight}
+                                    className={`cursor-pointer ${!canScrollRight && 'pointer-events-none'}`}
                                 >
                                     <img
-                                        src={
-                                            startIndex + visibleCount < Best_stories_api_result?.length
-                                                ? "img/arrow-right-line.svg"
-                                                : "img/arrow-right-disable.svg"
-                                        }
+                                        src={canScrollRight ? "img/arrow-right-line.svg" : "img/arrow-right-disable.svg"}
                                         alt="Next"
                                     />
                                 </a>
@@ -302,16 +264,13 @@ if(header_slug){
                                 </div>
                             </div>
                         ) : (
-                           
-                            <div className="flex space-x-[28px] scroll-invisible overflow-hidden">
+
+                            <div className="flex space-x-[28px] scroll-invisible overflow-hidden max-sm:overflow-auto" ref={sliderRef}>
                                 <div
                                     className="flex space-x-[28px] transition-transform duration-300"
-                                    style={{
-                                        transform: `translateX(-${startIndex * 388}px)`, // Adjust based on card width
-                                    }}
                                 >
                                     {Best_stories_api_result?.map((val, i) => (
-                                        <a key={i} href={`/blog/${val?.slug}`} className="w-[360px] min-w-[360px]  group">
+                                        <a key={i} href={`/blog/${val?.slug}`} className="w-[360px] min-w-[360px]  group max-sm:w-[300px] max-sm:min-w-[300px] ">
                                             <div className="relative mb-[35px] rounded-[24px] w-full overflow-hidden">
                                                 <img
                                                     src={val?.coverImage}
@@ -363,11 +322,12 @@ if(header_slug){
                     <div
                         class="border-[#1516183D] mx-auto px-4 pt-[49px] pb-[74px] max-[1280px]:pb-[32px] border-b border-solid max-w-[1280px]">
                         <div
-                            class="flex max-[560px]:flex-col justify-between items-center max-[560px]:items-start gap-4 mb-[45px]">
+                            class="flex max-md:flex-col justify-between items-center max-md:items-start gap-4 mb-[45px]">
                             <h3
-                                class="max-[560px]:mr-auto max-w-[479px] font-light text-[#151618] text-[56px] max-[500px]:text-[32px]">
-                                See what we’ve
-                                <span class="font-[700]">written lately</span>
+                                class="max-[560px]:mr-auto max-w-[500px] font-light text-[#151618] text-[56px] max-[500px]:text-[32px]">
+                                See what
+                                <p>we’ve<span class="font-[700]"> written lately</span></p>
+
                             </h3>
                             <div class="flex flex-col items-end space-y-[9px]">
                                 <div class="flex items-center -space-x-5">

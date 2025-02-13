@@ -2,7 +2,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { fetchGraphQl } from '../api/graphicql';
 import { GET_HEADER_LOGO_QUERY, GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUERY } from '../api/query';
-import { header_slug_Reduc_function, Header_api_result_redux_function, Header_keyword_redux_function } from '@/StoreConfiguration/slices/customer';
+import { header_slug_Reduc_function, Header_api_result_redux_function, Header_keyword_redux_function, Header_logo_api_result_redux_function } from '@/StoreConfiguration/slices/customer';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -17,7 +17,7 @@ function Header_component({ }) {
     const pathname = usePathname();
 
     useEffect(() => {
-        const loginPath = ["/auth/signup", "/auth/signin" , "/auth/reset-password" , "/auth/forgot-password" , "/auth/change-password" , "/change-password"];
+        const loginPath = ["/auth/signup", "/auth/signin", "/auth/reset-password", "/auth/forgot-password", "/auth/change-password", "/change-password"];
         setLogin_Header(loginPath.includes(pathname));
     }, [pathname]); // Determines login header state
 
@@ -27,6 +27,7 @@ function Header_component({ }) {
 
     const header_slug = useSelector((s) => s.customerRedux.header_slug);
     const headerapi_result_redux = useSelector((s) => s.customerRedux.header_api_result_redux);
+    const header_logoapi_result_redux = useSelector((s) => s.customerRedux.Header_logo_api_result_redux);
 
     const router = useRouter();
 
@@ -121,6 +122,7 @@ function Header_component({ }) {
                 const fetchedCategoryList = await fetchGraphQl(GET_HEADER_LOGO_QUERY, variable_category);
                 console.log("fetchedCategoryList", fetchedCategoryList)
                 setheader_logo_result(fetchedCategoryList);
+                fetchedCategoryList && dispatch(Header_logo_api_result_redux_function(fetchedCategoryList))
             } catch (err) {
                 console.error("Error fetching category list:", err);
                 setError(err.message);
@@ -185,8 +187,8 @@ function Header_component({ }) {
 
     }
 
-    console.log("headerapi_result_redux" , headerapi_result_redux)
-    console.log("header_slug" , header_slug)
+    console.log("headerapi_result_redux", headerapi_result_redux)
+    console.log("header_slug", header_slug)
 
     return (
         <>
@@ -199,7 +201,7 @@ function Header_component({ }) {
                             {/* <img src={"/img/SpurtCMS-logo.svg"}
                                 alt="" /> */}
 
-                            <img src={logo_url + header_logo_result?.GeneralInformation?.logoPath}
+                            <img src={logo_url + header_logoapi_result_redux?.GeneralInformation?.logoPath}
                                 alt={"companylogo"}
 
                                 onError={({ currentTarget }) => {
@@ -251,7 +253,7 @@ function Header_component({ }) {
                     <div className="flex items-center space-x-[36px] max-xl:space-x-4">
                         <div
                             className={`${menuToggle ? "left-0" : "left-[-100%]"} top-0  z-10 lg:z-0 lg:static fixed flex flex-col lg:items-center gap-[1.5vw] bg-white lg:bg-[transparent] px-5 lg:px-0 py-5 lg:py-0 w-[50%] lg:w-auto max-sm:w-full h-full lg:h-auto duration-500 navLinks`}>
-                                
+
                             <ul className="flex lg:flex-row flex-col gap-[30px] max-lg:gap-[16px] p-0 w-full lg:w-auto">
                                 <li className="flex justify-end lg:hidden w-full">
                                     <a onClick={(e) => setMenuToggle(!menuToggle)} className="ml-auto w-4 text-[30px] cursor-pointer">
@@ -267,11 +269,11 @@ function Header_component({ }) {
                                             {val?.categoryName == "Best stories" ? <> </> : <>
 
                                                 <li onClick={(e) => handleClick_headerlist(e, val)}>
-                                                    <Link href={`/`} legacyBehavior>
+                                                    <Link href={`/${val?.categorySlug || ""}`} >
 
-                                                        <a
+                                                        <p
                                                             className={val?.categorySlug == header_slug ? "font-medium text-[#120B14] text-lg leading-[27px] active" : "font-medium text-[#120B14] text-base leading-[27px]"} >
-                                                            {val.categoryName}</a>
+                                                            {val.categoryName}</p>
                                                     </Link>
                                                 </li>
                                             </>}
@@ -283,15 +285,13 @@ function Header_component({ }) {
                                         <React.Fragment key={i}>
                                             {val?.categoryName == "Best stories" ? null : (
                                                 <li onClick={(e) => handleClick_headerlist(e, val)}>
-                                                    <Link href={`/`} legacyBehavior>
-                                                        <a
-                                                            className={
-                                                                val?.categorySlug == header_slug
-                                                                    ? "font-medium text-[#120B14] text-lg leading-[27px] active"
-                                                                    : "font-medium text-[#120B14] text-base leading-[27px]"
-                                                            }>
+                                                    <Link href={`/${val?.categorySlug || ""}`} >
+                                                        <p
+                                                            className={`font-medium text-[#120B14] leading-[27px] ${val?.categorySlug === header_slug ? "text-lg active" : "text-base"
+                                                                }`}
+                                                        >
                                                             {val.categoryName}
-                                                        </a>
+                                                        </p>
                                                     </Link>
                                                 </li>
                                             )}

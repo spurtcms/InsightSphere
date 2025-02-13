@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Blog_Index from "../app/blog/page";
+import Blog_Index from "./[blog]/page";
 import { fetchGraphQl } from "./api/graphicql";
 import { GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUERY } from "./api/query";
 
