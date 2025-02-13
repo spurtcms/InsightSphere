@@ -42,6 +42,6 @@ export const customerSlice = createSlice({
 });
 
 
-export const { addCount, EntryList_Redux_function, header_slug_Reduc_function ,Header_keyword_redux_function,Header_logo_api_result_redux_function} = customerSlice.actions;
+export const { addCount, EntryList_Redux_function, header_slug_Reduc_function ,Header_keyword_redux_function,Header_logo_api_result_redux_function , Header_api_result_redux_function} = customerSlice.actions;
 
 export default customerSlice.reducer;
