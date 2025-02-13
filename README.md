@@ -1,10 +1,9 @@
-# Blog generated using spurtCMS with Next.js 
+# Next.js Blog Template with SpurtCMS Integration
 
 ![Screenshot of spurtCMS using Presentation Tool to do Visual Editing](https://dev.spurtcms.com/public/img/Cover%20image%20-%20Stories.jpg)
 
 
-This sample blog is an excellent starting point to explore Next.js and spurtcms [spurtcms](https://dev.spurtcms.com). Get it up and running in minutes. Modify and adapt it to your liking;
-It comes with a native spurtcms that offers features like real-time collaboration and visual editing with live updates. Check out the [project documentaion](https://dev.spurtcms.com/documentation) for more details.
+This Blog Template offers a flexible and user-friendly structure for creating and managing blog posts. It provides a clean layout for presenting articles, making it easy to share your thoughts, ideas, and updates with your audience. With built-in features like categorization, tags, and a simple content management system, this template is perfect for bloggers looking to establish an online presence. Whether you're writing personal stories, industry insights, or tutorials, this template gives you everything you need to publish and manage content efficiently.
 
 The Studio connects to spurtcms, which gives you hosted content APIs with a flexible query language, on-demand image transformations, powerful patching, and more. You can use this starter to kick-start a blog or learn these technologies.
 
@@ -31,7 +30,7 @@ The Studio connects to spurtcms, which gives you hosted content APIs with a flex
 
 Use the Deploy Button below, you'll deploy the example using 
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/spurtcms/nextjs-blog-theme&demo-title=nextjs-blog-theme&env=next_public_spurtcms_nextjs_starter_apikey)
+
 
 
 ## Set up environment variables
@@ -92,6 +91,6 @@ npm run prod
 ```
 
 ## Feedback and Questions
-If you have feedback or questions about this starter, please use the Github Issues on this repo, [(https://github.com/spurtcms/nextjs-blog-theme/issues)]
+If you have feedback or questions about this starter, please use the Github Issues on this repo, [(https://github.com/spurtcms/InsightSphere/issues)]
 or Send Email to us [(support@spurtcms.com)]
 
