@@ -1,3 +1,4 @@
+import Header_component from "@/app/component/Header";
 import Auth_Header from "@/components/Header/page";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +10,11 @@ const ResetPassword = () => {
 
     return (
         <>
-<Auth_Header/>
+  <head>
+                <title>Reset Password</title>
+            </head>
+
+            <Header_component />
 <section className='bg-[#FAFAFA] min-h-[calc(100vh-120px)] p-[26px_16px] flex flex-col max-md:min-h-[calc(100vh-68px)] max-[1300px]:min-h-[calc(100vh-79px)] max-[1300px]:p-[16px]'>
                 <div className='w-[90%] mx-auto max-[1400px]:w-full mb-auto'>
                     <ul className='flex space-x-1 mb-[55px] max-[1300px]:mb-[24px] items-center'>

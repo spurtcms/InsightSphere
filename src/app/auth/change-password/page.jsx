@@ -1,6 +1,7 @@
 "use client"
 import { fetchGraphQl } from "@/app/api/graphicql";
 import { GET_POSTS_LIST_QUERY, GET_RESET_NEW_PASSWORD } from "@/app/api/query";
+import Header_component from "@/app/component/Header";
 import Auth_Header from "@/components/Header/page";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -185,7 +186,11 @@ const NewPassword = () => {
     return (
     <>
             {/* new password */}
-            <Auth_Header />
+            <head>
+                <title>Change Password</title>
+            </head>
+
+            <Header_component />
 
             <section className='bg-[#FAFAFA] min-h-[calc(100vh-120px)] p-[26px_16px] flex flex-col max-md:min-h-[calc(100vh-68px)] max-[1300px]:min-h-[calc(100vh-79px)] max-[1300px]:p-[16px]'>
                 <div className='w-[90%] mx-auto max-[1400px]:w-full mb-auto'>
