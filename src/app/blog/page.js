@@ -31,12 +31,12 @@ const Blog_Index = ({ home_page_description }) => {
     const [page_loader_layout_2, setpage_loader_layout_2] = useState(false)
     const [page_loader_layout_3, setpage_loader_layout_3] = useState(false)
 
-
+console.log(Best_stories_api_result,"beststories")
     // State definitions
     const [startIndex, setStartIndex] = useState(0); // For pagination or load more (if needed)
-    const visibleCount = 1; // Number of items to show per load (adjust as needed)
+    const visibleCount = 3; // Number of items to show per load (adjust as needed)
 
-    const [visibleCount_for_list, setvisibleCount_for_list] = useState(6); // Initially show 5 blogs
+    const [visibleCount_for_list, setvisibleCount_for_list] = useState(5); // Initially show 5 blogs
 
     const [isHydrated, setIsHydrated] = useState(false); // Hydration state
 
@@ -293,7 +293,7 @@ if(header_slug){
                             </div>
                         </div>
 
-                        {Best_stories_api_result?.length <= 0 ? (
+                        {Best_stories_api_result?.length == 0 ? (
                             <div className="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
                                 <div className="flex space-x-[28px] items-center justify-center">
                                     <p className="text-xl font-semibold text-[#151618CC] text-center">
@@ -302,6 +302,7 @@ if(header_slug){
                                 </div>
                             </div>
                         ) : (
+                           
                             <div className="flex space-x-[28px] scroll-invisible overflow-hidden">
                                 <div
                                     className="flex space-x-[28px] transition-transform duration-300"

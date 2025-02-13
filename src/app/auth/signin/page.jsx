@@ -207,7 +207,7 @@ const Signin = () => {
                         <div className='bg-[#FFFFFF] border border-[#E9E9E9] p-[30px] rounded-[12px]'>
                             <div className='mb-[24px] last-of-type:mb-0 relative'>
                                 <label className='text-[14px] font-medium leading-[16px] text-[#1D1D1F] block mb-[5px]'>Email</label>
-                                <input placeholder='Enter your Email' type="text" className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] placeholder:text-[#1516188F] ${emailStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="email" value={signup_Email} onChange={(e) => handleSignup(e)} />
+                                <input placeholder='Enter your Email' type="text" className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] text-black placeholder:text-[#1516188F] ${emailStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="email" value={signup_Email} onChange={(e) => handleSignup(e)} />
 
                                 {emailStateError &&
                                     <div className='absolute flex items-start space-x-[4px] mt-[5px]'><img src="/img/error.svg" alt="error" /> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{emailError} </p></div>}
@@ -215,7 +215,7 @@ const Signin = () => {
                             <div className='mb-[10px] last-of-type:mb-0 relative'>
                                 <label className='text-[14px] font-medium leading-[16px] text-[#1D1D1F] block mb-[5px]'>Password</label>
                                 <div className='relative flex items-center'>
-                                    <input placeholder="Enter your Password" type={`${hidePassword ? "text" : "password"}`} className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] placeholder:text-[#1516188F] ${passwordStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="password" value={signup_Password} onChange={(e) => handleSignup(e)} />
+                                    <input placeholder="Enter your Password" type={`${hidePassword ? "text" : "password"}`} className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] font-normal leading-[16px] text-black placeholder:text-[#1516188F] ${passwordStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="password" value={signup_Password} onChange={(e) => handleSignup(e)} />
                                     <button className='absolute right-[10px] p-0' onClick={(e) => setHidePassword(!hidePassword)}>
                                         <img src="/img/hide-password.svg" alt="password" />
                                     </button>

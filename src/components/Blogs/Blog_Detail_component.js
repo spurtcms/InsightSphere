@@ -166,17 +166,17 @@ const Blog_Detail_component = ({ postes, Total_Blogs_api_result, params }) => {
                         <div class="flex flex-col items-start">
                             <p class="mb-[19px] font-medium text-[#151618] text-sm">Share this post</p>
                             <div class="flex items-center bg-[#EFEEF0] rounded-[13px]">
-                                <a href={shareUrls.twitter}
+                                <a href={shareUrls.twitter} target='_blank'
                                     class="flex justify-center items-center bg-transparent hover:bg-[#c9c9c9] hover:rounded-[13px] w-[59.61px] h-[59.61px]">
                                     <img src="/img/share-link-1.svg" alt="" />
                                 </a>
-                                <a href={shareUrls.facebook}
+                                <a href={shareUrls.facebook} target='_blank'
                                     class="flex justify-center items-center bg-transparent hover:bg-[#c9c9c9] hover:rounded-[13px] w-[59.61px] h-[59.61px]"
 
                                 >
                                     <img src="/img/share-link-2.svg" alt="" />
                                 </a>
-                                <a href={shareUrls.instagram}
+                                <a href={shareUrls.instagram} target='_blank'
                                     class="flex justify-center items-center bg-transparent hover:bg-[#c9c9c9] hover:rounded-[13px] w-[59.61px] h-[59.61px]">
                                     <img src="/img/share-link-3.svg" alt="" />
                                 </a>
