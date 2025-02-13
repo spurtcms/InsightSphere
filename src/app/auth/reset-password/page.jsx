@@ -43,7 +43,7 @@ const ResetPassword = () => {
                 </div>
             {/* password reset*/}
 
-            <div className='max-w-[394px] mx-auto mb-[24px]'>
+            <div className='max-w-[394px] mx-auto mb-auto'>
                 <h1 className='text-[36px] font-semibold leading-[43px] text-[#1D1D1F] text-center mb-[17px] max-sm:text-[28px]'>Password Reset</h1>
                 <p className='text-base font-medium leading-[17px] text-[#83838D] text-center mb-[40px]'>Your password has been successfully reset.
                     click below to login  </p>

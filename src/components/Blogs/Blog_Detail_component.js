@@ -20,8 +20,6 @@ const sanitizeHTML = (html) => {
 };
 
 
-
-
 const Blog_Detail_component = ({ postes, Total_Blogs_api_result, params }) => {
 
 
@@ -168,17 +166,17 @@ const Blog_Detail_component = ({ postes, Total_Blogs_api_result, params }) => {
                             <div class="flex items-center bg-[#EFEEF0] rounded-[13px]">
                                 <a href={shareUrls.twitter} target='_blank'
                                     class="flex justify-center items-center bg-transparent hover:bg-[#c9c9c9] hover:rounded-[13px] w-[59.61px] h-[59.61px]">
-                                    <img src="/img/share-link-1.svg" alt="" />
+                                    <img src="/img/share-link-1.svg" alt="" className='w-[16px] h-[16px]' />
                                 </a>
                                 <a href={shareUrls.facebook} target='_blank'
                                     class="flex justify-center items-center bg-transparent hover:bg-[#c9c9c9] hover:rounded-[13px] w-[59.61px] h-[59.61px]"
 
                                 >
-                                    <img src="/img/share-link-2.svg" alt="" />
+                                    <img src="/img/share-link-2.svg" alt="" className='w-[16px] h-[16px]' />
                                 </a>
                                 <a href={shareUrls.instagram} target='_blank'
                                     class="flex justify-center items-center bg-transparent hover:bg-[#c9c9c9] hover:rounded-[13px] w-[59.61px] h-[59.61px]">
-                                    <img src="/img/share-link-3.svg" alt="" />
+                                    <img src="/img/share-link-3.svg" alt="" className='w-[16px] h-[16px]' />
                                 </a>
                                 {/* <a href="#"
                                     class="flex justify-center items-center bg-transparent hover:bg-[#c9c9c9] hover:rounded-[13px] w-[59.61px] h-[59.61px]">
