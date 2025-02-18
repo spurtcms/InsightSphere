@@ -1,11 +1,13 @@
-# Next.js Blog Template with SpurtCMS Integration
+# InsightShpere
+
+Designed for blogging enthusiasts, this theme offers flexible designs and intuitive navigation to showcase your articles seamlessly.
 
 ![Screenshot of spurtCMS using Presentation Tool to do Visual Editing](https://dev.spurtcms.com/public/img/Cover%20image%20-%20Stories.jpg)
 
 
 This Blog Template offers a flexible and user-friendly structure for creating and managing blog posts. It provides a clean layout for presenting articles, making it easy to share your thoughts, ideas, and updates with your audience. With built-in features like categorization, tags, and a simple content management system, this template is perfect for bloggers looking to establish an online presence. Whether you're writing personal stories, industry insights, or tutorials, this template gives you everything you need to publish and manage content efficiently.
 
-The Studio connects to spurtcms, which gives you hosted content APIs with a flexible query language, on-demand image transformations, powerful patching, and more. You can use this starter to kick-start a blog or learn these technologies.
+The Studio connects to [spurtcms](https://spurtcms.com), which gives you hosted content APIs with a flexible query language, on-demand image transformations, powerful patching, and more. You can use this starter to kick-start a blog or learn these technologies.
 
 ## Features
 
