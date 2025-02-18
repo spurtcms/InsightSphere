@@ -225,10 +225,10 @@ const Signin = () => {
                             </div>
 
                             <div className='flex justify-between items-center'>
-                                <div className='flex items-center space-x-[8px]'>
+                                {/* <div className='flex items-center space-x-[8px]'>
                                     <input id="check1" className="cursor-pointer block w-[14px] h-[14px] border-[#00000026] checked:!bg-[#1D1D1F] rounded-[4px] shadow-none !outline-none focus:ring-0 focus:outline-none accent-black" type="checkbox" name="termCheck" />
                                     <label htmlFor="check1" className='text-[12px] font-medium leading-[14px] text-[#151618CC] cursor-pointer'>Remember Password</label>
-                                </div>
+                                </div> */}
 
                                
                                 <Link href="/auth/forgot-password" className='text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]'> Forgot Password</Link> 
