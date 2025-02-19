@@ -69,7 +69,7 @@ const Forgot_Password = () => {
                     "input": {
                         "email": emailId,
                         "tenantId": signupTenantId,
-                        "url":"url"
+                        "url":local_Url
                     }
                 }
             

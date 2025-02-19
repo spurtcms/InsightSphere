@@ -284,7 +284,7 @@ const Blog_Index = ({ home_page_description }) => {
                                                 <div className="bottom-[15px] left-[15px] absolute flex items-center -space-x-3">
                                                     <div className="inline-block relative border-2 border-white rounded-full w-[28px] h-[28px] object-center object-cover">
                                                         <img
-                                                            src={val?.authorDetails?.profileImagePath}
+                                                            src={image_url + val?.authorDetails?.profileImagePath}
                                                             alt={`${val?.firstName} ${val?.lastName}`}
                                                             onError={({ currentTarget }) => {
                                                                 currentTarget.onerror = null;

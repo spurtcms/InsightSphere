@@ -8,7 +8,8 @@ import storage from "./customStorage";
 const persistConfig = {
   key: "root",
   storage,
-  blacklist: ["register"],
+  blacklist: ["register","err"],
+  timeout: 10000,
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -17,9 +18,13 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 export function makeStore() {
   return configureStore({
     reducer: persistedReducer,
-    middleware: function (getDefaultMiddleware) {
-      return getDefaultMiddleware();
-    },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+          ignoredPaths: ['register', "err"],
+        },
+      }),
   });
 }
 

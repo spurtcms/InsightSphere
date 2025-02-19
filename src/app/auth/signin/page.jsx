@@ -224,7 +224,7 @@ const Signin = () => {
                                     <div className=' flex items-start space-x-[4px] mt-[5px]'><img src="/img/error.svg" alt="error" /> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{passwordError} </p></div>}
                             </div>
 
-                            <div className='flex justify-between items-center'>
+                            <div className='flex justify-end items-center'>
                                 {/* <div className='flex items-center space-x-[8px]'>
                                     <input id="check1" className="cursor-pointer block w-[14px] h-[14px] border-[#00000026] checked:!bg-[#1D1D1F] rounded-[4px] shadow-none !outline-none focus:ring-0 focus:outline-none accent-black" type="checkbox" name="termCheck" />
                                     <label htmlFor="check1" className='text-[12px] font-medium leading-[14px] text-[#151618CC] cursor-pointer'>Remember Password</label>
