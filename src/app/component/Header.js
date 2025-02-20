@@ -187,8 +187,10 @@ function Header_component({ }) {
 
     }
 
-    console.log("headerapi_result_redux", headerapi_result_redux)
-    console.log("header_slug", header_slug)
+    // console.log("headerapi_result_redux", headerapi_result_redux)
+    // console.log("header_slug", header_slug)
+    // console.log("header_logoapi_result_redux", header_logoapi_result_redux)
+    // console.log("header_logo_result", header_logo_result)
 
     return (
         <>
@@ -201,16 +203,31 @@ function Header_component({ }) {
                             {/* <img src={"/img/SpurtCMS-logo.svg"}
                                 alt="" /> */}
 
-                            <img src={logo_url + header_logoapi_result_redux?.GeneralInformation?.logoPath}
-                                alt={"companylogo"}
+                            {
+                                header_logo_result != null ?
+                                    <img src={logo_url + header_logo_result?.GeneralInformation?.logoPath}
+                                        alt={"companylogo"}
 
-                                onError={({ currentTarget }) => {
-                                    currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
-                                    currentTarget.src = "/img/no-image.png";    // Fallback to a default image
-                                }}
-                                style={{ width: "120px", height: "30px", objectFit: "contain" }}
+                                        onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
+                                            currentTarget.src = "/img/no-image.png";    // Fallback to a default image
+                                        }}
+                                        style={{ width: "120px", height: "30px", objectFit: "contain" }}
 
-                            />
+                                    />
+                                    :
+                                    <img src={logo_url + header_logoapi_result_redux?.GeneralInformation?.logoPath}
+                                        alt={"companylogo"}
+
+                                        onError={({ currentTarget }) => {
+                                            currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
+                                            currentTarget.src = "/img/no-image.png";    // Fallback to a default image
+                                        }}
+                                        style={{ width: "120px", height: "30px", objectFit: "contain" }}
+
+                                    />
+                            }
+
 
                         </a>
 
