@@ -130,7 +130,7 @@ function Header_component({ }) {
         };
 
         fetchCategoryList();
-    }, [Blogs_list_api_result]); // Fetch the category list only once on component mount
+    }, [header_api_result]); // Fetch the category list only once on component mount
 
     useEffect(() => {
         const fetchCategoryList = async () => {
