@@ -32,6 +32,8 @@ The Studio connects to [spurtcms](https://spurtcms.com), which gives you hosted 
 
 Use the Deploy Button below, you'll deploy the example using 
 
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fspurtcms%2Fv1-blog1-theme&demo-title=v1-blog1-theme&env=NEXT_PUBLIC_SPURTCMS_NEXTJS_STARTER_APIKEY)
+
 
 
 
