@@ -2,7 +2,7 @@
 const SkeletonLoader_homepage = () => {
     return (
 
-        <div class="flex space-x-[28px] scroll-invisible overflow-hidden">
+        <div className="flex space-x-[28px] scroll-invisible overflow-hidden">
 
             {[...Array(3)].map((_, index) => (
                 <div key={index} className="w-[360px]">

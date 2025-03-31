@@ -1,6 +1,7 @@
 // "use client"
 import { fetchGraphQl } from "@/app/api/graphicql";
 import { GET_POSTS_LIST_QUERY, GET_POSTS_SLUG_QUERY } from "@/app/api/query";
+import { channelName } from "@/app/api/url";
 import Blog_Detail_component from "@/components/Blogs/Blog_Detail_component";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -28,7 +29,8 @@ const Greeting = async ({ params }) => {
 
     let variable_list = {
         "entryFilter": {
-            "categorySlug": "blog"
+            "categorySlug": "blog",
+            "ChannelName": channelName
         },
         "commonFilter": {
             "limit": 10,

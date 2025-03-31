@@ -1,17 +1,17 @@
 "use client"
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchGraphQl } from '../api/graphicql';
 import { GET_HEADER_LOGO_QUERY, GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUERY } from '../api/query';
 import { header_slug_Reduc_function, Header_api_result_redux_function, Header_keyword_redux_function, Header_logo_api_result_redux_function } from '@/StoreConfiguration/slices/customer';
 import { useDispatch, useSelector } from 'react-redux';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { image_url, logo_url } from '../api/url';
+import { channelName, image_url, logo_url } from '../api/url';
 
 
 
 
-function Header_component({ }) {
+function Header_component() {
 
     const [login_Header, setLogin_Header] = useState(false);
     const pathname = usePathname();
@@ -61,6 +61,7 @@ function Header_component({ }) {
 
     const divRef = useRef(null); // Reference for the div
 
+    console.log(header_api_result, "headerApi")
 
     useEffect(() => {
         const handleOutsideClick = (event) => {
@@ -79,22 +80,46 @@ function Header_component({ }) {
 
 
     }, []);
+    useEffect(() => {
+        const fetchCategoryList = async () => {
+            let variable_category = {
+                "categoryFilter": {
+                    "categoryGroupSlug": "blog",
+                    "excludeGroup": true,
+                    "hierarchyLevel": 2
+
+                }
+            }
+
+            try {
+                const fetchedCategoryList = await fetchGraphQl(GET_POSTS_CHANNELLIST_QUERY, variable_category);
+                console.log(fetchedCategoryList, "kfnjksdfhkjrf")
+                setheader_api_result(fetchedCategoryList?.CategoryList?.categorylist);
+                dispatch(Header_api_result_redux_function(fetchedCategoryList?.CategoryList?.categorylist))
+            } catch (err) {
+                console.error("Error fetching category list:", err);
+            }
+        };
+
+        fetchCategoryList();
+    }, []); // Fetch the category list only once on component mount
 
     useEffect(() => {
         const fetchData = async () => {
             let variable_list = {
-                entryFilter: {
-                    categorySlug: "blog",
+                "entryFilter": {
+                    "categorySlug": "blog",
+                    "ChannelName": channelName
 
                 },
-                commonFilter: {
+                "commonFilter": {
                     // limit: 10,
                     // offset: 0,
-                    keyword: blog_keyword
+                    "keyword": blog_keyword
                 },
-                AdditionalData: {
-                    categories: true,
-                    authorDetails: true,
+                "AdditionalData": {
+                    "categories": true,
+                    "authorDetails": true,
                 },
             };
 
@@ -117,7 +142,7 @@ function Header_component({ }) {
                 tenantId: header_api_result?.[0]?.tenantId
 
             };
-
+            console.log(header_api_result?.[0]?.tenantId, "tenantId")
             try {
                 const fetchedCategoryList = await fetchGraphQl(GET_HEADER_LOGO_QUERY, variable_category);
                 console.log("fetchedCategoryList", fetchedCategoryList)
@@ -132,28 +157,7 @@ function Header_component({ }) {
         fetchCategoryList();
     }, [header_api_result]); // Fetch the category list only once on component mount
 
-    useEffect(() => {
-        const fetchCategoryList = async () => {
-            let variable_category = {
-                "categoryFilter": {
-                    "categoryGroupSlug": "blog",
-                    "excludeGroup": true,
-                    "hierarchyLevel": 2
 
-                }
-            }
-
-            try {
-                const fetchedCategoryList = await fetchGraphQl(GET_POSTS_CHANNELLIST_QUERY, variable_category);
-                setheader_api_result(fetchedCategoryList?.CategoryList?.categorylist);
-                dispatch(Header_api_result_redux_function(fetchedCategoryList?.CategoryList?.categorylist))
-            } catch (err) {
-                console.error("Error fetching category list:", err);
-            }
-        };
-
-        fetchCategoryList();
-    }, []); // Fetch the category list only once on component mount
 
     const handleClick_headerlist = (e, val) => {
 
@@ -247,14 +251,14 @@ function Header_component({ }) {
                                         {Blogs_list_api_result.length > 0 ? <>
                                             <li className='text-[12px] text-[#919090] font-medium mb-[10px]'>BLOGS</li>
                                             {Blogs_list_api_result?.map((val, i) => (
-                                                <>
+                                                <Fragment key={i} >
                                                     {/* <Link href={`/blog/${val?.slug}`} legacyBehavior> */}
 
-                                                    <li key={i} className='text-[12px] font-medium mb-[10px] cursor-pointer last-of-type:mb-0'
+                                                    <li className='text-[12px] font-medium mb-[10px] cursor-pointer last-of-type:mb-0'
                                                         onClick={(e) => handleClick_keyword(e, val)}
                                                     >{val?.title}</li>
                                                     {/* </Link> */}
-                                                </>
+                                                </Fragment>
                                             ))}
                                         </> : <>
                                             <li className='text-[12px] text-[#919090] text-center flex items-center space-x-2 mb-0'>No data found</li>
@@ -281,11 +285,11 @@ function Header_component({ }) {
                                 {[undefined, null, ""].includes(header_api_result) ? <>
 
                                     {headerapi_result_redux?.map((val, i) => (
-                                        <>
+                                        <Fragment key={i}>
 
                                             {val?.categoryName == "Best stories" ? <> </> : <>
 
-                                                <li onClick={(e) => handleClick_headerlist(e, val)}>
+                                                <li onClick={(e) => handleClick_headerlist(e, val)} >
                                                     <Link href={`/${val?.categorySlug || ""}`} >
 
                                                         <p
@@ -294,7 +298,7 @@ function Header_component({ }) {
                                                     </Link>
                                                 </li>
                                             </>}
-                                        </>
+                                        </Fragment>
                                     ))}
 
                                 </> : <>

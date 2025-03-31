@@ -1,6 +1,7 @@
 "use client"
 import { fetchGraphQl } from '@/app/api/graphicql'
 import { GET_POSTS_LIST_QUERY, GET_SIGNIN_QUERY } from '@/app/api/query'
+import { channelName } from '@/app/api/url'
 import Header_component from '@/app/component/Header'
 import Auth_Header from '@/components/Header/page'
 import Cookies from 'js-cookie'
@@ -37,7 +38,8 @@ const Signin = () => {
         const fetchData = async () => {
             const variable_list = {
                 "entryFilter": {
-                    "categorySlug": "best-stories"
+                    "categorySlug": "best-stories",
+                    "ChannelName": channelName
                 },
                 "commonFilter": {
                     // "limit": 10,
@@ -130,7 +132,7 @@ const Signin = () => {
 
                     const response = await fetchGraphQl(GET_SIGNIN_QUERY, register_list);
 
-                    console.log(response , "response")
+                    console.log(response, "response")
 
                     response?.memberCheckLogin?.email ? response?.memberCheckLogin?.password ? (setPasswordError(""), setPasswordStateError(false)) : (setPasswordError("Invalid Password"), setPasswordStateError(true)) : (setEmailError("Invalid Email"), setEmailStateError(true));
 
@@ -230,8 +232,8 @@ const Signin = () => {
                                     <label htmlFor="check1" className='text-[12px] font-medium leading-[14px] text-[#151618CC] cursor-pointer'>Remember Password</label>
                                 </div> */}
 
-                               
-                                <Link href="/auth/forgot-password" className='text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]'> Forgot Password</Link> 
+
+                                <Link href="/auth/forgot-password" className='text-[12px] font-semibold leading-[14px] hover:underline text-[#1D1D1F]'> Forgot Password</Link>
                                 {/* <a href="/auth/forgot-password" className='text-[12px] font-medium leading-[14px] text-[#1D1D1F] hover:underline'>Forgot Password ?</a> */}
                             </div>
                             <button onClick={(e) => submit_signup(e)} className='bg-[#1D1D1F] border border-[#D8D8D8] text-[14px] leading-[16px] p-[12px] w-full block h-[42px] font-semibold text-[#FFFFFF] mt-[32px] rounded-[4px] text-center hover:bg-[#28282c] max-[1300px]:mt-[16px]'>Sign In</button>

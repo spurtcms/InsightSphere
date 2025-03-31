@@ -7,7 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { fetchGraphQl } from '@/app/api/graphicql';
 import { data } from 'autoprefixer';
 import { useRouter } from 'next/navigation';
-import { local_Url } from '@/app/api/url';
+import { channelName, local_Url } from '@/app/api/url';
 import Header_component from '@/app/component/Header';
 
 const Forgot_Password = () => {
@@ -16,49 +16,54 @@ const Forgot_Password = () => {
     const [error, setError] = useState("")
     const [validcheck, setValidate] = useState("");
     const [emailErrorshow, setEmailErrorShow] = useState("");
-    const[successMsgShow,setSuccessMsgShow]=useState(false)
+    const [successMsgShow, setSuccessMsgShow] = useState(false)
     const [emailError, setEmailError] = useState("");
     //  const [userErrorShow,setErrorShow]=useState("");
     const [emailSubmit, setEmailSubmit] = useState(0);
-    const[sucesMsg,setSucesMsg]=useState("");
-    const [getErrorMsg,setGetErrorMsg]=useState("");
-    const [errorMsgShow,setErrorMsgShow]=useState(false);
+    const [sucesMsg, setSucesMsg] = useState("");
+    const [getErrorMsg, setGetErrorMsg] = useState("");
+    const [errorMsgShow, setErrorMsgShow] = useState(false);
     const router = useRouter();
     const EmailRegex = {
         email: /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/
     };
     const [signupTenantId, setSignupTenantId] = useState("");
     const [signupUserId, setSignupUserId] = useState("");
-     
-  useEffect(() => {
-          const fetchData = async () => {
-              const variable_list = {
-                  "entryFilter": {
-                      "categorySlug": "best-stories"
-                  },
-                  "commonFilter": {
-                      // "limit": 10,
-                      // "offset": 0
-                  },
-                  "AdditionalData": {
-                      "categories": true,
-                      "authorDetails": true
-                  }
-              };
-  
-              try {
-  
-                  const FetchValue = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
-                  setSignupTenantId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].tenantId)
-                  setSignupUserId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].createdBy)
-  
-              } catch (error) {
-                  console.error("Error fetching data:", error);
-              }
-          };
-  
-          fetchData();
-      }, []);
+    const [url, setUrl] = useState(null);
+    console.log(url, "urlurl")
+    useEffect(() => {
+        setUrl(window.location)
+    }, [])
+    useEffect(() => {
+        const fetchData = async () => {
+            const variable_list = {
+                "entryFilter": {
+                    "categorySlug": "best-stories",
+                    "ChannelName": channelName
+                },
+                "commonFilter": {
+                    // "limit": 10,
+                    // "offset": 0
+                },
+                "AdditionalData": {
+                    "categories": true,
+                    "authorDetails": true
+                }
+            };
+
+            try {
+
+                const FetchValue = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
+                setSignupTenantId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].tenantId)
+                setSignupUserId(FetchValue?.ChannelEntriesList?.channelEntriesList[0].createdBy)
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchData();
+    }, []);
     const handleVerifyMailId = () => {
         console.log("khfkejfekrjfkj")
         setEmailSubmit(1);
@@ -69,30 +74,30 @@ const Forgot_Password = () => {
                     "input": {
                         "email": emailId,
                         "tenantId": signupTenantId,
-                        "url":local_Url
+                        "url": url?.origin
                     }
                 }
-            
+
                 try {
                     const forgotPass_Call = await fetchGraphQl(GET_HEADER_FORGOT_PASSWORD_QUERY, password_params);
-                    console.log(forgotPass_Call,"whatDAtata")
-if(forgotPass_Call==null){
-    setGetErrorMsg("you are not regitered with us");
-        setErrorMsgShow(true);
-    console.log("not regitered",)
-}
-else{
-    setSucesMsg(forgotPass_Call?.forgotPassword?.message)
-    setSuccessMsgShow(true) 
-    console.log("successsss")
-}
+                    console.log(forgotPass_Call, "whatDAtata")
+                    if (forgotPass_Call == null) {
+                        setGetErrorMsg("you are not regitered with us");
+                        setErrorMsgShow(true);
+                        console.log("not regitered",)
+                    }
+                    else {
+                        setSucesMsg(forgotPass_Call?.forgotPassword?.message)
+                        setSuccessMsgShow(true)
+                        console.log("successsss")
+                    }
                 }
                 catch (error) {
-                    
-                   if(error==null){
-                    console.log( error,"incorrectmailId")
-                   }
-                   
+
+                    if (error == null) {
+                        console.log(error, "incorrectmailId")
+                    }
+
                 }
             };
             ForgotPasswordData();
@@ -195,13 +200,13 @@ else{
                                     <div className='absolute flex items-start space-x-[4px] mt-[5px]'><img src="/img/error.svg" alt="error" /> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{emailError} </p></div>}
 
 
-{
-   successMsgShow && 
-   <div className='absolute flex items-start space-x-[4px] mt-[5px]'> <p className='text-[10px] font-normal leading-[12px] text-[green]'>{sucesMsg} </p></div>}
+                                {
+                                    successMsgShow &&
+                                    <div className='absolute flex items-start space-x-[4px] mt-[5px]'> <p className='text-[10px] font-normal leading-[12px] text-[green]'>{sucesMsg} </p></div>}
 
-{
-   errorMsgShow && 
-   <div className='absolute flex items-start space-x-[4px] mt-[5px]'> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{getErrorMsg} </p></div>}
+                                {
+                                    errorMsgShow &&
+                                    <div className='absolute flex items-start space-x-[4px] mt-[5px]'> <p className='text-[10px] font-normal leading-[12px] text-[#EC1919]'>{getErrorMsg} </p></div>}
 
                             </div>
 

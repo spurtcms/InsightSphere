@@ -93,8 +93,6 @@ $AdditionalData: EntriesAdditionalData
       }
     }
   }
-
-
 `;
 
 export const GET_POSTS_CATEGORYLIST_QUERY = `query($hierarchylevel: Int!){
@@ -331,7 +329,7 @@ export const GET_POSTS_QUERY_CATEGORY = `query($hierarchylevel: Int!){
   `;
 
 export const GET_HEADER_LOGO_QUERY = `query
-  GeneralInformation($tenantId:Int){
+  GeneralInformation($tenantId:String){
       GeneralInformation(tenantId:$tenantId){
           companyName
           expandLogoPath
@@ -374,11 +372,11 @@ forgotPassword($input: MemberInfo!){
 }`;
 
 
-export const GET_RESET_NEW_PASSWORD =`mutation 
+export const GET_RESET_NEW_PASSWORD = `mutation 
 resetPassword($input: MemberResetpassInfo!){
   resetPassword(input:$input)
 }
 `
-  
+
 
 

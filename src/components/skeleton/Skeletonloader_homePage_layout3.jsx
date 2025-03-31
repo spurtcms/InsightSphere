@@ -4,7 +4,7 @@ export const Skeletonloader_homePage_layout3 = () => {
     return (
         <>
             <div
-                class="gap-[13px] grid grid-cols-5 max-[410px]:grid-cols-1 max-[560px]:grid-cols-2 max-[860px]:grid-cols-3 mb-[84px] max-[1280px]:mb-[32px]">
+                className="gap-[13px] grid grid-cols-5 max-[410px]:grid-cols-1 max-[560px]:grid-cols-2 max-[860px]:grid-cols-3 mb-[84px] max-[1280px]:mb-[32px]">
 
                 {Array.from({ length: 3 }).map((_, index) => (
                     <div key={index} className="animate-pulse w-full">

@@ -1,10 +1,10 @@
 "use client"
-import React, { useEffect, useRef, useState } from "react";
+import React, { Fragment, useEffect, useRef, useState } from "react";
 import { GET_AUTHOR_LIST_QUERY, GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUERY } from "../api/query";
 import { fetchGraphQl } from "../api/graphicql";
 import Header_component from "../component/Header";
 import moment from "moment";
-import { image_url } from "../api/url";
+import { channelName, image_url } from "../api/url";
 import { useSelector } from "react-redux";
 import { loadManifestWithRetries } from "next/dist/server/load-components";
 import SkeletonLoader_homepage from "@/components/skeleton/skeletonloader_homepage";
@@ -12,6 +12,7 @@ import { useRouter } from 'next/router';
 import { Skeletonloader_homePage_layout2 } from "@/components/skeleton/Skeletonloader_homePage_layout2";
 import { Skeletonloader_homePage_layout3 } from "@/components/skeleton/Skeletonloader_homePage_layout3";
 import useCarousel from "@/components/customComponent/useCarousel";
+import Head from "next/head";
 
 
 
@@ -45,16 +46,17 @@ const Blog_Index = ({ home_page_description }) => {
     const [loading, setLoading] = useState(false); // Loading state
     const [error, setError] = useState(null); // Error state
 
-    const {sliderRef ,  canScrollLeft , canScrollRight , scrollLeft , scrollRight} = useCarousel();
+    const { sliderRef, canScrollLeft, canScrollRight, scrollLeft, scrollRight } = useCarousel();
 
     const header_slug = useSelector((s) => s.customerRedux.header_slug)
-
+    console.log(header_slug, "header")
     useEffect(() => {
         setpage_loader(true)
         const fetchData = async () => {
             const variable_list = {
                 "entryFilter": {
-                    "categorySlug": "best-stories"
+                    "categorySlug": "best-stories",
+                    "ChannelName": channelName
                 },
                 "commonFilter": {
                     // "limit": 10,
@@ -118,6 +120,7 @@ const Blog_Index = ({ home_page_description }) => {
                 let variable_list = {
                     "entryFilter": {
                         "categorySlug": header_slug || "blog"
+
                     },
                     "commonFilter": {
                         "limit": 10,
@@ -134,6 +137,7 @@ const Blog_Index = ({ home_page_description }) => {
                 }
 
                 const data = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
+                console.log(data, "dataaa")
                 setAll_other_blogs_api_data(data?.ChannelEntriesList?.channelEntriesList); // Set the fetched data into state
                 setpage_loader_layout_3(false)
             } catch (error) {
@@ -155,7 +159,8 @@ const Blog_Index = ({ home_page_description }) => {
 
             const variable_list = {
                 "entryFilter": {
-                    "categorySlug": header_slug || "blog"
+                    "categorySlug": header_slug || "blog",
+                    "ChannelName": channelName
 
                 },
                 "commonFilter": {
@@ -205,19 +210,19 @@ const Blog_Index = ({ home_page_description }) => {
 
     return (
         <>
-            <head>
+            <Head>
                 <title>Blog</title>
-            </head>
+            </Head>
 
             <div>
                 <Header_component />
 
 
                 <section>
-                    <div class="border-[#1516183D] mx-auto px-[16px] pt-[41px] pb-[68px] max-[1280px]:pb-[32px] border-b border-solid max-w-[1280px]">
+                    <div className="border-[#1516183D] mx-auto px-[16px] pt-[41px] pb-[68px] max-[1280px]:pb-[32px] border-b border-solid max-w-[1280px]">
                         <h1
-                            class="mb-[61px] max-w-[1005px] font-light text-[#151618] text-[80px] max-[500px]:text-[48px] leading-[100px] max-[500px]:leading-[normal]">
-                            <span class="font-[700]">{home_page_description?.CategoryList?.categorylist?.[0]?.description}</span>
+                            className="mb-[61px] max-w-[1005px] font-light text-[#151618] text-[80px] max-[500px]:text-[48px] leading-[100px] max-[500px]:leading-[normal]">
+                            <span className="font-[700]">{home_page_description?.CategoryList?.categorylist?.[0]?.description}</span>
                         </h1>
                     </div>
 
@@ -320,21 +325,21 @@ const Blog_Index = ({ home_page_description }) => {
 
 
                     <div
-                        class="border-[#1516183D] mx-auto px-4 pt-[49px] pb-[74px] max-[1280px]:pb-[32px] border-b border-solid max-w-[1280px]">
+                        className="border-[#1516183D] mx-auto px-4 pt-[49px] pb-[74px] max-[1280px]:pb-[32px] border-b border-solid max-w-[1280px]">
                         <div
-                            class="flex max-md:flex-col justify-between items-center max-md:items-start gap-4 mb-[45px]">
+                            className="flex max-md:flex-col justify-between items-center max-md:items-start gap-4 mb-[45px]">
                             <h3
-                                class="max-[560px]:mr-auto max-w-[500px] font-light text-[#151618] text-[56px] max-[500px]:text-[32px]">
+                                className="max-[560px]:mr-auto max-w-[500px] font-light text-[#151618] text-[56px] max-[500px]:text-[32px]">
                                 See what
-                                <p>we’ve<span class="font-[700]"> written lately</span></p>
+                                <p>we’ve<span className="font-[700]"> written lately</span></p>
 
                             </h3>
-                            <div class="flex flex-col items-end space-y-[9px]">
-                                <div class="flex items-center -space-x-5">
+                            <div className="flex flex-col items-end space-y-[9px]">
+                                <div className="flex items-center -space-x-5">
                                     {Authors_api_result?.TopAuthorsList?.slice(0, 5).map((val, i) => (
-                                        <a
+                                        <a key={i}
                                             // href="#"
-                                            class="inline-block relative z-[5] border-2 border-white rounded-full w-[80px] h-[80px] object-center object-cover">
+                                            className="inline-block relative z-[5] border-2 border-white rounded-full w-[80px] h-[80px] object-center object-cover">
                                             {/* <img
                                                 src="img/stack-1.png"
                                                 alt="" /> */}
@@ -353,7 +358,7 @@ const Blog_Index = ({ home_page_description }) => {
                                     ))}
 
                                 </div>
-                                <p class="font-medium text-[#151618CC] text-sm">Meet our top authors</p>
+                                <p className="font-medium text-[#151618CC] text-sm">Meet our top authors</p>
                             </div>
                         </div>
                         {page_loader_layout_2 ? <>
@@ -362,7 +367,7 @@ const Blog_Index = ({ home_page_description }) => {
 
                             {[undefined, null, 0, ""].includes(BlogCards_layout2_data?.length) ?
                                 <>
-                                    <div class="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
+                                    <div className="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
                                         <div className="flex items-center justify-center ">
                                             <p className="text-xl font-semibold text-[#151618CC] text-center">
                                                 No data found
@@ -374,25 +379,25 @@ const Blog_Index = ({ home_page_description }) => {
 
                                 <>
                                     <div
-                                        class="gap-[22px] grid grid-cols-3 max-[530px]:grid-cols-1 max-[680px]:grid-cols-2 mb-[74px] max-[1280px]:mb-[32px]">
+                                        className="gap-[22px] grid grid-cols-3 max-[530px]:grid-cols-1 max-[680px]:grid-cols-2 mb-[74px] max-[1280px]:mb-[32px]">
 
                                         {
                                             BlogCards_layout2_data?.slice(0, visibleCount_for_list)?.map((val, index) => (
 
-                                                <>
-                                                    <a href={`/blog/${val?.slug}`} class="w-full group">
-                                                        <div class="relative mb-[35px] rounded-[24px] w-full overflow-hidden">
+                                                <Fragment key={index}>
+                                                    <a href={`/blog/${val?.slug}`} className="w-full group">
+                                                        <div className="relative mb-[35px] rounded-[24px] w-full overflow-hidden">
                                                             <img src={val?.coverImage} alt={val?.title}
-                                                                class="group-hover:scale-[1.1] rounded-[24px] w-full transition-all h-[418px] object-cover"
+                                                                className="group-hover:scale-[1.1] rounded-[24px] w-full transition-all h-[418px] object-cover"
                                                                 onError={({ currentTarget }) => {
                                                                     currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
                                                                     currentTarget.src = "/img/no-image.png";  // Fallback to a default image
                                                                 }}
                                                             />
 
-                                                            <div class="bottom-[15px] left-[15px] absolute flex items-center -space-x-3">
+                                                            <div className="bottom-[15px] left-[15px] absolute flex items-center -space-x-3">
                                                                 <div
-                                                                    class="inline-block relative border-2 border-white rounded-full w-[40px] h-[40px] object-center object-cover ">
+                                                                    className="inline-block relative border-2 border-white rounded-full w-[40px] h-[40px] object-center object-cover ">
                                                                     <img src={image_url + val?.authorDetails?.profileImagePath} alt={`${val?.firstName} ${val?.lastName}`}
                                                                         onError={({ currentTarget }) => {
                                                                             currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
@@ -402,39 +407,39 @@ const Blog_Index = ({ home_page_description }) => {
                                                                     />
                                                                 </div>
                                                                 {/* <div
-                                                    class="inline-block relative border-2 border-white rounded-full w-[40px] h-[40px] object-center object-cover">
+                                                    className="inline-block relative border-2 border-white rounded-full w-[40px] h-[40px] object-center object-cover">
                                                     <img src="img/stack-3.png" alt="" />
                                                 </div> */}
                                                             </div>
                                                         </div>
-                                                        <div class="flex flex-wrap gap-[6px] mb-[18px]">
+                                                        <div className="flex flex-wrap gap-[6px] mb-[18px]">
 
                                                             {val?.categories?.[0]?.map((val, i) => (
-                                                                <>
+                                                                <Fragment key={i}>
                                                                     {val?.categoryName == "Blog" ? <></> : <>
-                                                                        <div class="flex items-center bg-[#EFEEF0] px-[12px] rounded-[50px] h-[28px]">
-                                                                            <span class="font-normal text-[#120B14] text-sm">{val?.categoryName}</span>
+                                                                        <div className="flex items-center bg-[#EFEEF0] px-[12px] rounded-[50px] h-[28px]">
+                                                                            <span className="font-normal text-[#120B14] text-sm">{val?.categoryName}</span>
                                                                         </div>
 
                                                                     </>}
 
 
 
-                                                                </>
+                                                                </Fragment>
                                                             ))}
 
                                                         </div>
-                                                        <h3 class="mb-[12px] font-[700] text-[24px] text-[#151618]">
+                                                        <h3 className="mb-[12px] font-[700] text-[24px] text-[#151618]">
                                                             {val?.title}
                                                         </h3>
 
                                                         {val?.description ? (
                                                             <p
-                                                                class="line-clamp-4 font-inter font-normal text-[#131313] text-base leading-[24px]"
+                                                                className="line-clamp-4 font-inter font-normal text-[#131313] text-base leading-[24px]"
                                                                 dangerouslySetInnerHTML={{
                                                                     __html: val?.description
                                                                         ?.replaceAll("<br>", " ") // Replace <br> tags with spaces
-                                                                        .replaceAll(/<div class="card[^"]*"(.*?)<\/div>/g, '') // Remove specific <div> tags
+                                                                        .replaceAll(/<div className="card[^"]*"(.*?)<\/div>/g, '') // Remove specific <div> tags
                                                                         .replaceAll(/<img[^>]*>/g, "") // Remove all <img> tags
                                                                         .replace(/p-\[24px_60px_10px\]/g, "") // Remove specific styles
                                                                         .replace(/<\/?[^>]+(>|$)/g, "") // Remove all remaining HTML tags
@@ -454,17 +459,17 @@ const Blog_Index = ({ home_page_description }) => {
 
                                                     </a>
 
-                                                </>
+                                                </Fragment>
                                             ))}
                                     </div>
                                 </>
                             }
                         </>}
-                        <div class="flex justify-center">
+                        <div className="flex justify-center">
 
                             {visibleCount_for_list < BlogCards_layout2_data?.length && (
                                 <a
-                                    class="flex justify-center items-center bg-[#120B14] hover:bg-[#382f3b] px-[32px] rounded-[50px] h-[47px] font-[600] text-base text-white cursor-pointer"
+                                    className="flex justify-center items-center bg-[#120B14] hover:bg-[#382f3b] px-[32px] rounded-[50px] h-[47px] font-[600] text-base text-white cursor-pointer"
                                     onClick={handleLoadMore}
                                 >
                                     Load more
@@ -476,15 +481,15 @@ const Blog_Index = ({ home_page_description }) => {
                     </div>
 
 
-                    <div class="border-[#1516183D] mx-auto px-4 pt-[24px] pb-[43px] border-b border-solid max-w-[1280px]">
-                        <h3 class="mb-[32px] font-[700] text-[#120B14] text-[20px]">Recommended</h3>
+                    <div className="border-[#1516183D] mx-auto px-4 pt-[24px] pb-[43px] border-b border-solid max-w-[1280px]">
+                        <h3 className="mb-[32px] font-[700] text-[#120B14] text-[20px]">Recommended</h3>
                         {page_loader_layout_3 ? <>
                             <Skeletonloader_homePage_layout3 />
                         </> : <>
 
                             {[undefined, null, 0, ""].includes(All_other_blogs_api_data?.length) ?
                                 <>
-                                    <div class="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
+                                    <div className="flex space-x-[28px] scroll-invisible overflow-hidden justify-center">
                                         <div className="flex items-center justify-center ">
                                             <p className="text-xl font-semibold text-[#151618CC] text-center">
                                                 No data found
@@ -496,19 +501,19 @@ const Blog_Index = ({ home_page_description }) => {
 
                                 <>
                                     <div
-                                        class="gap-[13px] grid grid-cols-5 max-[410px]:grid-cols-1 max-[560px]:grid-cols-2 max-[860px]:grid-cols-3 mb-[84px] max-[1280px]:mb-[32px]">
+                                        className="gap-[13px] grid grid-cols-5 max-[410px]:grid-cols-1 max-[560px]:grid-cols-2 max-[860px]:grid-cols-3 mb-[84px] max-[1280px]:mb-[32px]">
 
                                         {
 
 
                                             All_other_blogs_api_data?.slice(0, 5)?.map((val, i) => (
-                                                <>
+                                                <Fragment key={i}>
 
-                                                    <a href={`/blog/${val?.slug}`} class="group">
-                                                        <div class="mb-[27px] rounded-[24px] w-full overflow-hidden">
+                                                    <a href={`/blog/${val?.slug}`} className="group">
+                                                        <div className="mb-[27px] rounded-[24px] w-full overflow-hidden">
 
                                                             <img src={val?.coverImage} alt={val?.title}
-                                                                class="group-hover:scale-[1.1] grop-hover:scale-50 rounded-[24px] transition-all"
+                                                                className="group-hover:scale-[1.1] grop-hover:scale-50 rounded-[24px] transition-all"
                                                                 onError={({ currentTarget }) => {
                                                                     currentTarget.onerror = null;  // Prevent infinite loop if fallback fails
                                                                     currentTarget.src = "/img/no-image.png";  // Fallback to a default image
@@ -517,12 +522,12 @@ const Blog_Index = ({ home_page_description }) => {
                                                             />
 
                                                         </div>
-                                                        <h3 class="font-[700] text-[#151618] text-[18px]">
+                                                        <h3 className="font-[700] text-[#151618] text-[18px]">
                                                             {val?.title}
                                                         </h3>
                                                     </a>
 
-                                                </>
+                                                </Fragment>
                                             ))}
                                     </div>
                                 </>

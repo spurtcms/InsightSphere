@@ -1,6 +1,7 @@
 "use client"
 import { fetchGraphQl } from '@/app/api/graphicql';
 import { GET_POSTS_LIST_QUERY, GET_REGISTER_QUERY } from '@/app/api/query';
+import { channelName } from '@/app/api/url';
 import Header_component from '@/app/component/Header';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -25,8 +26,8 @@ const Signup = () => {
     const [signupUserId, setSignupUserId] = useState("");
     const [hidePassword, setHidePassword] = useState(false);
 
-     const [loginResponse, setLoginResponse] = useState(false);
-    
+    const [loginResponse, setLoginResponse] = useState(false);
+
     const router = useRouter();
 
     const signupRegex = {
@@ -39,7 +40,8 @@ const Signup = () => {
         const fetchData = async () => {
             const variable_list = {
                 "entryFilter": {
-                    "categorySlug": "best-stories"
+                    "categorySlug": "best-stories",
+                    "ChannelName": channelName
                 },
                 "commonFilter": {
                     // "limit": 10,
@@ -76,7 +78,7 @@ const Signup = () => {
         let isValid = true;
 
         if (signup_Name !== '') {
-           
+
             if (!signupRegex.name.test(signup_Name)) {
                 setNameError("Name must be at least 3 characters long");
                 setNameStateError(true);
@@ -142,9 +144,16 @@ const Signup = () => {
                 console.log("register_list", register_list)
                 try {
                     const response = await fetchGraphQl(GET_REGISTER_QUERY, register_list);
-                    console.log(" response" ,  response)
+                    console.log(" response", response)
                     setLoginResponse(response)
-                    loginResponse ? router.push("/") : (setEmailError("Email already exists"), setEmailStateError(true));
+                    if (response?.memberRegister) {
+                        router.push("/")
+                    }
+                    else {
+                        setEmailError("Email already exists")
+                        setEmailStateError(true)
+                    }
+                    // loginResponse ? router.push("/") : (setEmailError("Email already exists"), setEmailStateError(true));
                 } catch (error) {
                     console.error("Error fetching data:", error);
                 }
@@ -170,7 +179,7 @@ const Signup = () => {
         }
     };
 
- 
+
     return (
         <>
             <head>
@@ -220,8 +229,8 @@ const Signup = () => {
                             <div className='mb-[24px] last-of-type:mb-0  relative'>
                                 <label className='text-[14px] font-medium leading-[16px] text-[#1D1D1F] block mb-[5px]'>Password</label>
                                 <div className='relative flex items-center'>
-                                    <input placeholder="Enter your Password" type={`${hidePassword?"text":"password"}`} className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] text-black font-normal leading-[16px] placeholder:text-[#1516188F] ${passwordStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="password" value={signup_Password} onChange={handleSignup} />
-                                    <button className='absolute right-[10px] p-0' onClick={(e)=>setHidePassword(!hidePassword)}>
+                                    <input placeholder="Enter your Password" type={`${hidePassword ? "text" : "password"}`} className={`border rounded-[4px] h-[42px] p-[6px_10px] outline-none block w-full text-[14px] text-black font-normal leading-[16px] placeholder:text-[#1516188F] ${passwordStateError ? "border-[#EC1919]" : "border-[#00000029]"} `} id="password" value={signup_Password} onChange={handleSignup} />
+                                    <button className='absolute right-[10px] p-0' onClick={(e) => setHidePassword(!hidePassword)}>
                                         <img src="/img/hide-password.svg" alt="password" />
                                     </button>
                                 </div>
