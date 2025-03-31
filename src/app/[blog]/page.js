@@ -119,7 +119,8 @@ const Blog_Index = ({ home_page_description }) => {
             try {
                 let variable_list = {
                     "entryFilter": {
-                        "categorySlug": header_slug || "blog"
+                        "categorySlug": header_slug || "blog",
+                        "ChannelName": channelName
 
                     },
                     "commonFilter": {
