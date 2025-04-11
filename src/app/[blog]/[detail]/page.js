@@ -7,51 +7,53 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 export const metadata = {
-    title: {
-        default: "Blog",
-    },
-
-}
-
-
+  title: {
+    default: "Blog",
+  },
+};
 
 const Greeting = async ({ params }) => {
+  let variable_slug = {
+    slug: params?.detail,
+    AdditionalData: { authorDetails: true, categories: true },
+  };
 
-    let variable_slug = { "slug": params?.detail, "AdditionalData": { "authorDetails": true, "categories": true } };
+  const postes = await fetchGraphQl(GET_POSTS_SLUG_QUERY, variable_slug);
+  if (!postes) {
+    return notFound();
+  }
 
-    const postes = await fetchGraphQl(GET_POSTS_SLUG_QUERY, variable_slug)
-    if (!postes) {
-        return notFound();
-    }
+  console.log("postes", postes);
 
-    console.log("postes", postes)
+  let variable_list = {
+    entryFilter: {
+      categorySlug: "blog",
+      ChannelName: channelName,
+    },
+    commonFilter: {
+      limit: 10,
+      offset: 0,
+    },
+    AdditionalData: {
+      categories: true,
+      authorDetails: true,
+    },
+  };
 
+  const Total_Blogs_api_result = await fetchGraphQl(
+    GET_POSTS_LIST_QUERY,
+    variable_list
+  );
 
-    let variable_list = {
-        "entryFilter": {
-            "categorySlug": "blog",
-            "ChannelName": channelName
-        },
-        "commonFilter": {
-            "limit": 10,
-            "offset": 0
-        },
-        "AdditionalData": {
-            "categories": true,
-            "authorDetails": true
-        }
-
-    }
-
-    const Total_Blogs_api_result = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list)
-
-    return (
-        <>
-
-            <Blog_Detail_component postes={postes} Total_Blogs_api_result={Total_Blogs_api_result} params={params.detail} />
-
-        </>
-    );
+  return (
+    <>
+      <Blog_Detail_component
+        postes={postes}
+        Total_Blogs_api_result={Total_Blogs_api_result}
+        params={params.detail}
+      />
+    </>
+  );
 };
 
 export default Greeting;

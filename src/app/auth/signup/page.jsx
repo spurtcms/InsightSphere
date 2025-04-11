@@ -147,7 +147,7 @@ const Signup = () => {
                     console.log(" response", response)
                     setLoginResponse(response)
                     if (response?.memberRegister) {
-                        router.push("/")
+                        router.push("/auth/signin")
                     }
                     else {
                         setEmailError("Email already exists")

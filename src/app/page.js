@@ -4,9 +4,6 @@ import { fetchGraphQl } from "./api/graphicql";
 import { GET_POSTS_CHANNELLIST_QUERY, GET_POSTS_LIST_QUERY } from "./api/query";
 
 export default async function Home() {
-
-
-
   // let variable_category = {
   //   "categoryFilter": {
   //     "categoryGroupSlug": "blog",
@@ -16,7 +13,6 @@ export default async function Home() {
   //   }
   // }
   // const headerdata = await fetchGraphQl(GET_POSTS_CHANNELLIST_QUERY, variable_category)
-
 
   // let variable_list = {
   //   "entryFilter": {
@@ -39,8 +35,6 @@ export default async function Home() {
 
   // const Listdata = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list)
 
-
-
   // let variable_all_other_stories = {
   //   "entryFilter": {
   //     "categorySlug": "blog"
@@ -57,28 +51,24 @@ export default async function Home() {
   //     "sortBy": "en.created_on",
   //   }
 
-
   // }
 
   // const all_other_stories = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_all_other_stories)
 
-
-
   let variable_home_des = {
-    "categoryFilter": {
-      "categoryGroupSlug": "blog",
-      "hierarchyLevel": 1
-
-    }
-  }
-  const home_page_description = await fetchGraphQl(GET_POSTS_CHANNELLIST_QUERY, variable_home_des)
-
-
+    categoryFilter: {
+      categoryGroupSlug: "blog",
+      hierarchyLevel: 1,
+    },
+  };
+  const home_page_description = await fetchGraphQl(
+    GET_POSTS_CHANNELLIST_QUERY,
+    variable_home_des
+  );
 
   return (
     <>
       <Blog_Index home_page_description={home_page_description} />
-
     </>
   );
 }

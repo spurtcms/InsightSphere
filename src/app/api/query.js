@@ -1,4 +1,3 @@
-
 export const GET_POSTS_LIST_QUERY = `query
   ChannelEntriesList(
 $commonFilter: Filter
@@ -106,7 +105,6 @@ export const GET_POSTS_CATEGORYLIST_QUERY = `query($hierarchylevel: Int!){
     }
   }
   `;
-
 
 export const GET_POSTS_SLUG_QUERY = `query ChannelEntryDetail(
 $id: Int
@@ -260,7 +258,7 @@ $AdditionalData: EntriesAdditionalData
 }
 
 
-  `
+  `;
 
 export const GET_POSTS_CHANNELLIST_QUERY = `query
   CategoryList(
@@ -278,7 +276,7 @@ $commonFilter: Filter
         }
       }
     
-  }`
+  }`;
 
 export const GET_AUTHOR_LIST_QUERY = `query
 TopAuthorsList($id: Int){
@@ -295,7 +293,7 @@ TopAuthorsList($id: Int){
 }
 
 
-`
+`;
 
 export const GET_POSTS_CHANNELLIST_SLUG_QUERY = `
   query channelDetail($id: Int,$slug: String,$active: Boolean){
@@ -313,8 +311,7 @@ export const GET_POSTS_CHANNELLIST_SLUG_QUERY = `
     modifiedBy
     tenantId
   }
-}`
-
+}`;
 
 export const GET_POSTS_QUERY_CATEGORY = `query($hierarchylevel: Int!){
     categoriesList(hierarchyLevel: $hierarchylevel){
@@ -339,7 +336,6 @@ export const GET_HEADER_LOGO_QUERY = `query
   }
 `;
 
-
 export const GET_REGISTER_QUERY = `mutation
   memberRegister(
 $input: MemberDetails!
@@ -348,9 +344,6 @@ $arguments: MemberArguments
     memberRegister(input:$input,
     arguments:$arguments)
   }`;
-
-
-
 
 export const GET_SIGNIN_QUERY = `mutation
   memberCheckLogin($input: MemberSignin!){
@@ -371,12 +364,40 @@ forgotPassword($input: MemberInfo!){
   }
 }`;
 
-
 export const GET_RESET_NEW_PASSWORD = `mutation 
 resetPassword($input: MemberResetpassInfo!){
   resetPassword(input:$input)
 }
-`
+`;
+export const UPDATE_MEMBERDETAILS_MUTATION = `
+mutation updateMemberProfile($input: UpdateMember!){
+  updateMemberProfile(input:$input){
+    message
+    memberDetails{
+      Id
+      firstName
+      lastName
+      mobile
+      username
+      profileImage
+      profileImagePath
+      password
+    }
+  }
+}
+`;
 
-
-
+export const GET_MEMBERDETAILS_QUERY = `
+query MemberProfileDetails($id: Int!){
+  MemberProfileDetails(id:$id){
+    Id
+    firstName
+    lastName
+    profileImage
+    profileImagePath
+    password
+    username
+    mobile 
+  }
+}
+`;
