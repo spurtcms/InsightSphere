@@ -1,30 +1,15 @@
 "use client";
-import React from "react";
+import React, { Fragment } from "react";
 import DOMPurify from "dompurify";
 import moment from "moment";
 import Header_component from "@/app/component/Header";
 import { useRouter } from "next/navigation";
 import { image_url } from "@/app/api/url";
 
-const sanitizeHTML = (html) => {
-  const sanitized = DOMPurify.sanitize(html, {
-    // FORBID_TAGS: ['h1', 'img'], // Remove <h1> and <img> tags
-    FORBID_ATTR: ["style"], // Remove inline styles for consistency
-  });
-  // Remove first <img> tag found in the sanitized HTML
-  return sanitized
-    .replace(/<br>/g, " ") // Replace <br> with spaces
-    .replace(/<div className="card[^"]*"(.*?)<\/div>/g, "") // Remove specific <div> tags
-    .replace(/<h1[^>]*>.*?<\/h1>/, "") // Remove the first <h1> tag and its content
-    .replace(/<img[^>]*>/, ""); // Remove the first <img> tag, regardless of where it is
-};
-
 const Blog_Detail_component = ({ postes, Total_Blogs_api_result, params }) => {
   const Detail_Result = postes.ChannelEntryDetail;
   const total_blogs_arr =
     Total_Blogs_api_result?.ChannelEntriesList?.channelEntriesList;
-
-  console.log("Total_Blogs_api_result", Detail_Result);
 
   let see_all_other_blogs = total_blogs_arr.filter(
     (item) => item.slug !== params
@@ -46,13 +31,20 @@ const Blog_Detail_component = ({ postes, Total_Blogs_api_result, params }) => {
     nextData = total_blogs_arr[currentIndex + 1];
   }
 
-  console.log("Previous", previousData, nextData?.title); // Show previous data
-
-  console.log("see_all_other_blogs", see_all_other_blogs);
-
   const router = useRouter();
   const currentURL = `https://spurtcms.com${router.asPath}`; // Replace with your actual domain
-
+  const sanitizeHTML = (html) => {
+    const sanitized = DOMPurify.sanitize(html, {
+      // FORBID_TAGS: ['h1', 'img'], // Remove <h1> and <img> tags
+      FORBID_ATTR: ["style"], // Remove inline styles for consistency
+    });
+    // Remove first <img> tag found in the sanitized HTML
+    return sanitized
+      .replace(/<br>/g, " ") // Replace <br> with spaces
+      .replace(/<div className="card[^"]*"(.*?)<\/div>/g, "") // Remove specific <div> tags
+      .replace(/<h1[^>]*>.*?<\/h1>/, "") // Remove the first <h1> tag and its content
+      .replace(/<img[^>]*>/, ""); // Remove the first <img> tag, regardless of where it is
+  };
   // Social share URLs
   const shareUrls = {
     facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
@@ -77,7 +69,7 @@ const Blog_Detail_component = ({ postes, Total_Blogs_api_result, params }) => {
               <div className="flex flex-col items-start">
                 <div className="flex flex-wrap gap-[6px] mb-[14px]">
                   {Detail_Result?.categories?.[0]?.map((val, i) => (
-                    <>
+                    <Fragment key={i}>
                       {val?.categoryName == "Blog" ? (
                         <></>
                       ) : (
@@ -87,7 +79,7 @@ const Blog_Detail_component = ({ postes, Total_Blogs_api_result, params }) => {
                           </span>
                         </>
                       )}
-                    </>
+                    </Fragment>
                   ))}
                   {/* <span
                                         className="flex justify-center items-center bg-[#EFEEF0] px-[12px] rounded-[50px] h-[28px] font-medium text-[#120B14] text-sm">Idea</span>

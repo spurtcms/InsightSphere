@@ -1,11 +1,5 @@
 "use client";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
-import { fetchGraphQl } from "../api/graphicql";
-import {
-  GET_HEADER_LOGO_QUERY,
-  GET_POSTS_CHANNELLIST_QUERY,
-  GET_POSTS_LIST_QUERY,
-} from "../api/query";
 import {
   header_slug_Reduc_function,
   Header_api_result_redux_function,
@@ -16,10 +10,52 @@ import { useDispatch, useSelector } from "react-redux";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { channelName, image_url, logo_url } from "../api/url";
+import { Login_token, NameString, UniqueId } from "../api/clientactions";
+import { fetchGraphQl } from "../api/graphicql";
+import {
+  GET_HEADER_LOGO_QUERY,
+  GET_POSTS_CHANNELLIST_QUERY,
+  GET_POSTS_LIST_QUERY,
+  GET_USER_DETAILS,
+} from "../api/query";
 
 function Header_component() {
   const [login_Header, setLogin_Header] = useState(false);
   const pathname = usePathname();
+  const getToken = Login_token();
+  const [token, setToken] = useState("");
+  const profile_image = image_url;
+  const [isPopoverVisible, setPopoverVisible] = useState(false);
+  const [registered, setRegistered] = useState("");
+  const [userDetails, setUserDetails] = useState("");
+  const [profileData, setProfileData] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const imagUrl = image_url;
+  const nameStringData = NameString();
+
+  const Id = UniqueId();
+  useEffect(() => {
+    const fetchData = async () => {
+      let variable = {
+        id: Id,
+      };
+      try {
+        if (Id !== null) {
+          const data = await fetchGraphQl(GET_USER_DETAILS, variable);
+          setUserDetails(data?.MemberProfileDetails?.profileImagePath);
+          setProfileData(data?.MemberProfileDetails);
+        }
+      } catch (err) {
+        console.error("Error fetching data:", err);
+        setErrorMessage(err);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setRegistered(getToken);
+  }, []);
 
   useEffect(() => {
     const loginPath = [
@@ -89,8 +125,6 @@ function Header_component() {
 
   const divRef = useRef(null); // Reference for the div
 
-  console.log(header_api_result, "headerApi");
-
   useEffect(() => {
     const handleOutsideClick = (event) => {
       if (divRef.current && !divRef.current.contains(event.target)) {
@@ -121,7 +155,7 @@ function Header_component() {
           GET_POSTS_CHANNELLIST_QUERY,
           variable_category
         );
-        console.log(fetchedCategoryList, "kfnjksdfhkjrf");
+
         setheader_api_result(fetchedCategoryList?.CategoryList?.categorylist);
         dispatch(
           Header_api_result_redux_function(
@@ -171,13 +205,13 @@ function Header_component() {
       const variable_category = {
         tenantId: header_api_result?.[0]?.tenantId,
       };
-      console.log(header_api_result?.[0]?.tenantId, "tenantId");
+
       try {
         const fetchedCategoryList = await fetchGraphQl(
           GET_HEADER_LOGO_QUERY,
           variable_category
         );
-        console.log("fetchedCategoryList", fetchedCategoryList);
+
         setheader_logo_result(fetchedCategoryList);
         fetchedCategoryList &&
           dispatch(Header_logo_api_result_redux_function(fetchedCategoryList));
@@ -192,7 +226,6 @@ function Header_component() {
 
   const handleClick_headerlist = (e, val) => {
     e.preventDefault();
-    console.log("ewewe223", val);
 
     dispatch(header_slug_Reduc_function(val?.categorySlug));
     setheader_categorySlug(val?.categoryName);
@@ -218,10 +251,21 @@ function Header_component() {
     router.push(`/blog/${val.slug}`);
   };
 
-  // console.log("headerapi_result_redux", headerapi_result_redux)
-  // console.log("header_slug", header_slug)
-  // console.log("header_logoapi_result_redux", header_logoapi_result_redux)
-  // console.log("header_logo_result", header_logo_result)
+  const handleClick_signup = (e) => {
+    router.push("/auth/signup");
+  };
+
+  const handleProfile = () => {
+    router.push("/auth/my-profile");
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setRegistered("");
+    localStorage.removeItem("Id");
+    localStorage.removeItem("NameString");
+    router.push("/");
+  };
 
   return (
     <>
@@ -398,18 +442,84 @@ function Header_component() {
                 )}
               </ul>
             </div>
-            <Link
-              href="/auth/signin"
-              className="p-[10px_32px] inline-block rounded-[50px] text-base font-semibold leading-[27px]   text-[#FFFFFF] bg-[#120B14] whitespace-nowrap max-md:p-[10px_14px] max-md:leading-none  max-md:text-sm hover:bg-[#28282c] max-sm:!ml-0"
-            >
-              join now
-            </Link>
-            <button
-              onClick={(e) => setMenuToggle(!menuToggle)}
-              className="w-[24px] max-lg:grid hidden"
-            >
-              <img src="/img/menu-button.svg" alt="menu" />
-            </button>
+
+            <div className="relative inline-block text-center">
+              {registered === "" ||
+              registered === null ||
+              registered === undefined ? (
+                <button
+                  onClick={handleClick_signup}
+                  className="flex justify-center items-center bg-[#120B14]  hover:bg-[#28282c] px-[32px] max-[700px]:px-4 rounded-[50px] h-[47px] font-[700] text-base text-white whitespace-nowrap"
+                >
+                  Join Now
+                </button>
+              ) : (
+                <>
+                  <div>
+                    {userDetails ? (
+                      <button
+                        type="button"
+                        className="inline-flex w-12 h-12 justify-center  rounded-md    shadow-xs   hover:bg-gray-50"
+                        id="menu-button"
+                        aria-expanded={isPopoverVisible}
+                        aria-haspopup="true"
+                        onClick={() => setPopoverVisible((prev) => !prev)}
+                      >
+                        <img
+                          src={imagUrl + userDetails}
+                          alt="profile"
+                          className="w-12 h-12 rounded-full"
+                        />
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className="w-12 h-12 bg-[#DD5B15] hover:bg-[#823e19] rounded-full text-2xl font-semibold text-white flex items-center justify-center "
+                        onClick={() => setPopoverVisible((prev) => !prev)}
+                      >
+                        {profileData?.NameString}
+                      </button>
+                    )}
+                  </div>
+
+                  {isPopoverVisible && (
+                    <div
+                      className="absolute right-0 z-auto mt-2 w-32 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-hidden"
+                      role="menu"
+                      aria-orientation="vertical"
+                      aria-labelledby="menu-button"
+                      tabIndex="-1"
+                    >
+                      <div className="px-3 py-2 bg-gray-50 border-gray-700 rounded-lg">
+                        <button
+                          type="button" // Changed to button
+                          className="flex items-center space-x-2 mb-4 w-full h-full text-left text-[14px] font-normal leading-[17px] text-[#120B14] hover:bg-[#F1F1F1] rounded-lg"
+                          role="menuitem"
+                          tabIndex="-1"
+                          id="menu-item-profile" // Unique ID
+                          onClick={handleProfile}
+                        >
+                          <img src="/img/profile1.svg" alt="profile" />
+                          My Profile
+                        </button>
+
+                        <button
+                          type="button" // Changed to button
+                          className="flex items-center ml-1 space-x-2 w-full h-full text-left text-[14px] font-normal leading-[17px] text-[#120B14] hover:bg-[#F1F1F1] rounded-lg"
+                          role="menuitem"
+                          tabIndex="-1"
+                          id="menu-item-logout" // Unique ID
+                          onClick={handleLogout}
+                        >
+                          <img src="/img/logout.svg" alt="logout" />
+                          Logout
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </header>

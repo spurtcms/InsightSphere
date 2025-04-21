@@ -10,7 +10,7 @@ const useCarousel = () => {
     const checkScrollButtons = () => {
         if (sliderRef.current) {
             const { scrollLeft, scrollWidth, clientWidth } = sliderRef.current;
-            console.log("scrollLeft, scrollWidth, clientWidth ", scrollLeft, scrollWidth, clientWidth)
+           
             setCanScrollLeft(scrollLeft > 0);
             setCanScrollRight(scrollLeft + clientWidth < scrollWidth);
         }

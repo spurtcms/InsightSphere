@@ -23,8 +23,6 @@ const Greeting = async ({ params }) => {
     return notFound();
   }
 
-  console.log("postes", postes);
-
   let variable_list = {
     entryFilter: {
       categorySlug: "blog",

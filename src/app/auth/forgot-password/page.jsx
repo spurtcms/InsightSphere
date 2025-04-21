@@ -30,7 +30,7 @@ const Forgot_Password = () => {
     const [signupTenantId, setSignupTenantId] = useState("");
     const [signupUserId, setSignupUserId] = useState("");
     const [url, setUrl] = useState(null);
-    console.log(url, "urlurl")
+    
     useEffect(() => {
         setUrl(window.location)
     }, [])
@@ -65,7 +65,7 @@ const Forgot_Password = () => {
         fetchData();
     }, []);
     const handleVerifyMailId = () => {
-        console.log("khfkejfekrjfkj")
+     
         setEmailSubmit(1);
         if (validateMailId()) {
             const ForgotPasswordData = async () => {
@@ -80,22 +80,22 @@ const Forgot_Password = () => {
 
                 try {
                     const forgotPass_Call = await fetchGraphQl(GET_HEADER_FORGOT_PASSWORD_QUERY, password_params);
-                    console.log(forgotPass_Call, "whatDAtata")
+                  
                     if (forgotPass_Call == null) {
                         setGetErrorMsg("you are not regitered with us");
                         setErrorMsgShow(true);
-                        console.log("not regitered",)
+                      
                     }
                     else {
                         setSucesMsg(forgotPass_Call?.forgotPassword?.message)
                         setSuccessMsgShow(true)
-                        console.log("successsss")
+                    
                     }
                 }
                 catch (error) {
 
                     if (error == null) {
-                        console.log(error, "incorrectmailId")
+                    
                     }
 
                 }
@@ -103,7 +103,7 @@ const Forgot_Password = () => {
             ForgotPasswordData();
         }
         else {
-            console.log("Email is Invalid")
+          
             setEmailError(" Please enter your mail")
         }
     }

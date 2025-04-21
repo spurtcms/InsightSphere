@@ -30,8 +30,6 @@ const Blog_Index = ({ home_page_description }) => {
   const [page_loader_layout_2, setpage_loader_layout_2] = useState(false);
   const [page_loader_layout_3, setpage_loader_layout_3] = useState(false);
 
-  console.log(Best_stories_api_result, "beststories");
-  console.log(BlogCards_layout2_data?.[0]?.tenantId, "tenatnjhd");
   // State definitions
   const [startIndex, setStartIndex] = useState(0); // For pagination or load more (if needed)
   const visibleCount = 3; // Number of items to show per load (adjust as needed)
@@ -46,9 +44,9 @@ const Blog_Index = ({ home_page_description }) => {
 
   const { sliderRef, canScrollLeft, canScrollRight, scrollLeft, scrollRight } =
     useCarousel();
-  console.log(Authors_api_result, "cdkjckdjdkjkdj");
+
   const header_slug = useSelector((s) => s.customerRedux.header_slug);
-  console.log(header_slug, "header");
+
   useEffect(() => {
     setpage_loader(true);
     const fetchData = async () => {
@@ -91,26 +89,23 @@ const Blog_Index = ({ home_page_description }) => {
 
     const fetchAuthors = async () => {
       setLoading(true); // Indicate loading has started
-      console.log("Starting fetchAuthors...");
 
       const variable_get_authors_list = {
         id: BlogCards_layout2_data?.[0]?.tenantId,
       };
 
       try {
-        console.log("Fetching authors...");
         const response = await fetchGraphQl(
           GET_AUTHOR_LIST_QUERY,
           variable_get_authors_list
         );
-        console.log("Authors fetched successfully:", response);
+
         setAuthors_api_result(response); // Update state with the response
       } catch (err) {
         console.error("Error fetching authors:", err);
         setError(err.message); // Store the error message
       } finally {
         setLoading(false); // Indicate loading has ended
-        console.log("Fetch completed.");
       }
     };
     if (BlogCards_layout2_data?.[0]?.tenantId) {
@@ -141,7 +136,7 @@ const Blog_Index = ({ home_page_description }) => {
         };
 
         const data = await fetchGraphQl(GET_POSTS_LIST_QUERY, variable_list);
-        console.log(data, "dataaa");
+
         setAll_other_blogs_api_data(
           data?.ChannelEntriesList?.channelEntriesList
         ); // Set the fetched data into state
@@ -200,8 +195,6 @@ const Blog_Index = ({ home_page_description }) => {
   }, [header_slug]);
 
   if (!isHydrated) return null; // Avoid rendering until hydration
-
-  console.log("Authors_api_result", Authors_api_result);
 
   // Function to handle "Load More" button click
   const handleLoadMore = () => {

@@ -1,5 +1,5 @@
 export const GET_POSTS_LIST_QUERY = `query
-  ChannelEntriesList(
+ChannelEntriesList(
 $commonFilter: Filter
 $sort: Sort
 $entryFilter: EntriesFilter
@@ -93,18 +93,6 @@ $AdditionalData: EntriesAdditionalData
     }
   }
 `;
-
-export const GET_POSTS_CATEGORYLIST_QUERY = `query($hierarchylevel: Int!){
-    categoriesList(hierarchyLevel: $hierarchylevel){
-      categories{
-        id
-        categoryName
-        categorySlug
-        parentId
-      }
-    }
-  }
-  `;
 
 export const GET_POSTS_SLUG_QUERY = `query ChannelEntryDetail(
 $id: Int
@@ -256,8 +244,6 @@ $AdditionalData: EntriesAdditionalData
     }
   }
 }
-
-
   `;
 
 export const GET_POSTS_CHANNELLIST_QUERY = `query
@@ -279,7 +265,7 @@ $commonFilter: Filter
   }`;
 
 export const GET_AUTHOR_LIST_QUERY = `query
-TopAuthorsList($id: Int){
+TopAuthorsList($id: String){
   TopAuthorsList(id:$id){
     id
     profileImagePath
@@ -294,36 +280,6 @@ TopAuthorsList($id: Int){
 
 
 `;
-
-export const GET_POSTS_CHANNELLIST_SLUG_QUERY = `
-  query channelDetail($id: Int,$slug: String,$active: Boolean){
-  ChannelDetail(channelId: $id,channelSlug: $slug,isActive: $active){
-    id
-    channelName
-    channelDescription
-    slugName
-    fieldGroupId
-    isActive
-    createdOn
-    createdBy
-    isDeleted
-    modifiedOn
-    modifiedBy
-    tenantId
-  }
-}`;
-
-export const GET_POSTS_QUERY_CATEGORY = `query($hierarchylevel: Int!){
-    categoriesList(hierarchyLevel: $hierarchylevel){
-      categories{
-        id
-        categoryName
-        categorySlug
-        parentId
-      }
-    }
-  }
-  `;
 
 export const GET_HEADER_LOGO_QUERY = `query
   GeneralInformation($tenantId:String){
@@ -353,7 +309,19 @@ export const GET_SIGNIN_QUERY = `mutation
       message
       token
       success
+       memberDetails{
+        Id
+        firstName
+        lastName
+        NameString
+        email
+        password
+        mobile
+        profileImage
+        profileImagePath
+      }
     }
+
   }
 `;
 
@@ -369,8 +337,22 @@ resetPassword($input: MemberResetpassInfo!){
   resetPassword(input:$input)
 }
 `;
-export const UPDATE_MEMBERDETAILS_MUTATION = `
-mutation updateMemberProfile($input: UpdateMember!){
+export const GET_USER_DETAILS = `query MemberProfileDetails($id: Int!){
+  MemberProfileDetails(id:$id){
+    Id
+    firstName
+    lastName
+    email
+    profileImage
+    profileImagePath
+    password
+    username
+    mobile  
+    NameString
+  }
+}`;
+
+export const UPDATE_USER_DETAILS = `mutation updateMemberProfile($input: UpdateMember!){
   updateMemberProfile(input:$input){
     message
     memberDetails{
@@ -384,20 +366,4 @@ mutation updateMemberProfile($input: UpdateMember!){
       password
     }
   }
-}
-`;
-
-export const GET_MEMBERDETAILS_QUERY = `
-query MemberProfileDetails($id: Int!){
-  MemberProfileDetails(id:$id){
-    Id
-    firstName
-    lastName
-    profileImage
-    profileImagePath
-    password
-    username
-    mobile 
-  }
-}
-`;
+}`;
